@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 
+import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
-import com.github.deltabreaker.data.WebHandler;
 
 public class CommandManager implements Runnable {
 
@@ -55,7 +55,21 @@ enum Command {
 
 	},
 
-	server() {
+	load {
+
+		@Override
+		public void run(String[] args) {
+			FileManager.loadCSVData(args[1]);
+		}
+
+		@Override
+		public String getDescription() {
+			return "load 'file' - Loads the specified JSON for item data.";
+		}
+
+	},
+
+	server {
 
 		@Override
 		public void run(String[] args) {
@@ -70,7 +84,7 @@ enum Command {
 
 	},
 
-	update() {
+	update {
 
 		@Override
 		public void run(String[] args) {
@@ -83,12 +97,12 @@ enum Command {
 						break;
 					}
 					if (s.startsWith("-recentcy")) {
-						resultLimit = Integer.parseInt(s.split("=")[1]);
+						recentcy = Integer.parseInt(s.split("=")[1]);
 						break;
 					}
 				}
 
-				WebHandler.updateResults(MarketData.getIDs(), resultLimit, recentcy);
+				WebHandler.updateResults(Item.getIDList(), resultLimit, recentcy);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -96,44 +110,67 @@ enum Command {
 
 		@Override
 		public String getDescription() {
-			return "update - Updates the market data. Args: results_limit=(int), recentcy_limit=(int)";
+			return "update - Updates the market data. Args: -results_limit=(int), -recentcy_limit=(int)";
 		}
 
 	},
 
-	profit() {
+	search {
 
 		@Override
 		public void run(String[] args) {
+
+			// Sets up and searches for args given
+			String sortType = "";
 			String searchTerm = "";
+			int category = 0;
 			int offset = 0;
+			int resultSize = 20;
 			for (String s : args) {
+				if (s.startsWith("-sort_type")) {
+					sortType = s.split("=")[1];
+					break;
+				}
 				if (s.startsWith("-search_term")) {
 					searchTerm = s.split("=")[1];
+					break;
+				}
+				if (s.startsWith("-category")) {
+					category = Integer.parseInt(s.split("=")[1]);
 					break;
 				}
 				if (s.startsWith("-offset")) {
 					offset = Integer.parseInt(s.split("=")[1]);
 					break;
 				}
+				if (s.startsWith("-result_size")) {
+					resultSize = Integer.parseInt(s.split("=")[1]);
+					break;
+				}
 			}
 
-			MarketData[] results = MarketData.getSearchResults(searchTerm.split(","), "profit", offset,
-					offset + Integer.parseInt(args[1]));
+			// Searched the market data for a list of items matching the terms given
+			// (sorted)
+			MarketData[] results = MarketData.getSearchResults(searchTerm.split(","), sortType, category, offset,
+					offset + resultSize);
 
+			// Prints the results to the console
 			System.out.println();
 			System.out.println("Results: ");
 			for (int i = 0; i < results.length; i++) {
+
+				// Calculated the percentage of profit compared to the highest profitability
 				double profitability = (long) ((results[i].getProfitability()
 						/ MarketData.getHighestSearchProfitability()) * 10000) / 100.0;
 				System.out.println(results[i].getName() + " - " + profitability + "% - "
 						+ (int) results[i].getAverageGilPerUnit() + " x " + (int) results[i].getAverageStackSize());
 			}
+			System.out.println();
 		}
 
 		@Override
 		public String getDescription() {
-			return "profit 'result size' - Displays a list of the most profitable items currently sold. Args: search_term=(string,string...), -offset=(int)";
+			return "search - Displays a list of the most profitable items currently sold. \nArgs: \n-search_term=(string,string...), \n-category=(int) \n-result_size=(int) \n-offset=(int) \n-sort_type=(string)";
 		}
 
 	};

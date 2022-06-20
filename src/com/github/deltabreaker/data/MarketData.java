@@ -1,19 +1,12 @@
 package com.github.deltabreaker.data;
 
-import java.io.File;
-import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 public class MarketData {
 
-	private static HashMap<Long, String> nameTable = new HashMap<>();
 	private static HashMap<Long, MarketData> marketData = new HashMap<>();
 
 	private static TreeMap<Double, MarketData> profitabilityFilter = new TreeMap<>();
@@ -25,6 +18,7 @@ public class MarketData {
 	private static ArrayList<MarketData> searchList = new ArrayList<>();
 
 	private long id;
+	private long category;
 	@SuppressWarnings("unused")
 	private long[] pricesPerUnit;
 	@SuppressWarnings("unused")
@@ -42,12 +36,13 @@ public class MarketData {
 	private long totalSold;
 	private double profitability;
 
-	public MarketData(long id, long[] pricesPerUnit, long[] quantities, long[] saleTimes) {
-		updateData(id, pricesPerUnit, quantities, saleTimes);
+	public MarketData(long id, long category, long[] pricesPerUnit, long[] quantities, long[] saleTimes) {
+		updateData(id, category, pricesPerUnit, quantities, saleTimes);
 	}
 
-	public void updateData(long id, long[] pricesPerUnit, long[] quantities, long[] saleTimes) {
+	public void updateData(long id, long category, long[] pricesPerUnit, long[] quantities, long[] saleTimes) {
 		this.id = id;
+		this.category = category;
 		this.pricesPerUnit = pricesPerUnit;
 		this.quantities = quantities;
 		this.saleTimes = saleTimes;
@@ -80,7 +75,7 @@ public class MarketData {
 	}
 
 	public String getName() {
-		return nameTable.get(id);
+		return Item.getItem(id).getName();
 	}
 
 	public double getTotalProfit() {
@@ -109,23 +104,6 @@ public class MarketData {
 
 	public double getAverageGilPerUnit() {
 		return averageGilPerUnit;
-	}
-
-	public static void loadNameTable(String filePath) throws Exception {
-		JSONArray marketIDs = (JSONArray) new JSONParser().parse(new FileReader(new File(filePath)));
-		for (int i = 0; i < marketIDs.size(); i++) {
-			JSONObject item = (JSONObject) marketIDs.get(i);
-			nameTable.put((long) item.get("id"), (String) item.get("name"));
-		}
-		System.out.println(LocalDateTime.now() + " [ItemSaleHistory]: " + nameTable.size() + " items loaded");
-	}
-
-	public static ArrayList<Long> getIDs() {
-		ArrayList<Long> ids = new ArrayList<>();
-		for (Long l : nameTable.keySet()) {
-			ids.add(l);
-		}
-		return ids;
 	}
 
 	public static double getHighestProfitability() {
@@ -174,18 +152,16 @@ public class MarketData {
 	public static MarketData[] getProfitabilityResults(int start, int end) {
 		ArrayList<MarketData> results = new ArrayList<>();
 
-		synchronized (profitabilityList) {
-			for (int i = start; i < end; i++) {
-				if (i < profitabilityList.size()) {
-					results.add(profitabilityList.get(i));
-				}
+		for (int i = start; i < end; i++) {
+			if (i < profitabilityList.size()) {
+				results.add(profitabilityList.get(i));
 			}
 		}
 
 		return results.toArray(new MarketData[results.size()]);
 	}
 
-	public static MarketData[] getSearchResults(String[] name, String type, int start, int end) {
+	public static MarketData[] getSearchResults(String[] name, String type, int category, int start, int end) {
 		searchList.clear();
 
 		for (MarketData m : marketData.values()) {
@@ -193,7 +169,8 @@ public class MarketData {
 
 			case "sales":
 				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+					if (m.getName().toLowerCase().contains(s.toLowerCase())
+							&& (category == 0 || m.category == category)) {
 						searchFilter.put((double) m.totalSold, m);
 						break;
 					}
@@ -202,7 +179,8 @@ public class MarketData {
 
 			default:
 				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+					if (m.getName().toLowerCase().contains(s.toLowerCase())
+							&& (category == 0 || m.category == category)) {
 						searchFilter.put(m.profitability, m);
 						break;
 					}
@@ -253,11 +231,11 @@ public class MarketData {
 		return searchList.size();
 	}
 
-	public static void update(long itemID, long[] pricesPerUnit, long[] quantities, long[] saleTimes) {
+	public static void update(long itemID, long category, long[] pricesPerUnit, long[] quantities, long[] saleTimes) {
 		if (marketData.containsKey(itemID)) {
-			marketData.get(itemID).updateData(itemID, pricesPerUnit, quantities, saleTimes);
+			marketData.get(itemID).updateData(itemID, category, pricesPerUnit, quantities, saleTimes);
 		} else {
-			marketData.put(itemID, new MarketData(itemID, pricesPerUnit, quantities, saleTimes));
+			marketData.put(itemID, new MarketData(itemID, category, pricesPerUnit, quantities, saleTimes));
 		}
 	}
 }
