@@ -1,6 +1,10 @@
 package com.github.deltabreaker.main;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -13,10 +17,23 @@ public class FileManager {
 	public static final int NAME_LOCATION = 10;
 	public static final int CATEGORY_LOCATION = 17;
 
-	public static void loadCSVData(String file) {
+	public static String loadCSVData(String file) {
+		try {
+			return readCSVData(new FileReader(file));
+		} catch (FileNotFoundException e) {
+			return " [FileManager]: Error reading CSV data.";
+		}
+	}
+
+	public static String loadCSVData(InputStream in) {
+		return readCSVData(new InputStreamReader(in));
+	}
+
+	private static String readCSVData(Reader reader) {
+		String text;
 		try {
 			ArrayList<String[]> lines = new ArrayList<>();
-			try (CSVReader csvReader = new CSVReader(new FileReader(file));) {
+			try (CSVReader csvReader = new CSVReader(reader)) {
 				String[] values = null;
 				while ((values = csvReader.readNext()) != null) {
 					lines.add(values);
@@ -30,10 +47,14 @@ public class FileManager {
 				}
 			}
 
-			System.out.println(LocalDateTime.now() + " [FileManager]: " + Item.getItemListSize() + " items loaded");
+			text = LocalDateTime.now() + " [FileManager]: " + Item.getItemListSize() + " items loaded";
+			System.out.println(text);
+			return text;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading CSV data.");
+			text = LocalDateTime.now() + " [FileManager]: Error reading CSV data.";
+			System.out.println(text);
+			return text;
 		}
 	}
 

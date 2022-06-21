@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
@@ -42,15 +43,25 @@ enum Command {
 	help {
 
 		@Override
-		public void run(String[] args) {
-			for (Command c : Command.values()) {
-				System.out.println(c.getDescription() + "\n");
+		public String[] run(String[] args) {
+			if (args.length > 1) {
+				ArrayList<String> output = new ArrayList<>();
+				for (Command c : Command.values()) {
+					String text = c.getDescription();
+					System.out.println(text + "\n");
+					output.add(text);
+				}
+				return output.toArray(new String[output.size()]);
+			} else {
+				String text = Command.valueOf(args[1]).getDescription();
+				System.out.println(text + "\n");
+				return new String[] { text };
 			}
 		}
 
 		@Override
 		public String getDescription() {
-			return "help - Lists commands and relevent arguments.";
+			return "help 'command (optional)' - Lists commands and relevent arguments.";
 		}
 
 	},
@@ -58,8 +69,9 @@ enum Command {
 	load {
 
 		@Override
-		public void run(String[] args) {
-			FileManager.loadCSVData(args[1]);
+		public String[] run(String[] args) {
+			String status = FileManager.loadCSVData(args[1]);
+			return new String[] { status };
 		}
 
 		@Override
@@ -72,9 +84,11 @@ enum Command {
 	server {
 
 		@Override
-		public void run(String[] args) {
-			WebHandler.setServer(args[1]);
-			System.out.println(LocalDateTime.now() + " [MatketUpdateThread]: Target server has been updated.");
+		public String[] run(String[] args) {
+			WebManager.setServer(args[1]);
+			String text = LocalDateTime.now() + " [MatketUpdateThread]: Target server has been updated.";
+			System.out.println(text);
+			return new String[] { text };
 		}
 
 		@Override
@@ -87,24 +101,26 @@ enum Command {
 	update {
 
 		@Override
-		public void run(String[] args) {
+		public String[] run(String[] args) {
 			try {
-				long resultLimit = WebHandler.DEFAULT_RESULTS_SIZE;
-				long recentcy = WebHandler.DEFAULT_RECENTCY;
+				long resultLimit = WebManager.DEFAULT_RESULTS_SIZE;
+				long recentcy = WebManager.DEFAULT_RECENTCY;
 				for (String s : args) {
 					if (s.startsWith("-result_limit")) {
 						resultLimit = Integer.parseInt(s.split("=")[1]);
-						break;
+						continue;
 					}
 					if (s.startsWith("-recentcy")) {
 						recentcy = Integer.parseInt(s.split("=")[1]);
-						break;
+						continue;
 					}
 				}
 
-				WebHandler.updateResults(Item.getIDList(), resultLimit, recentcy);
+				WebManager.updateResults(Item.getIDList(), resultLimit, recentcy);
+				return new String[] { LocalDateTime.now() + " [MatketUpdateThread]: Market data updated." };
 			} catch (Exception e) {
 				e.printStackTrace();
+				return new String[] { LocalDateTime.now() + " [MatketUpdateThread]: Error updating market data." };
 			}
 		}
 
@@ -118,7 +134,7 @@ enum Command {
 	search {
 
 		@Override
-		public void run(String[] args) {
+		public String[] run(String[] args) {
 
 			// Sets up and searches for args given
 			String sortType = "";
@@ -129,23 +145,23 @@ enum Command {
 			for (String s : args) {
 				if (s.startsWith("-sort_type")) {
 					sortType = s.split("=")[1];
-					break;
+					continue;
 				}
 				if (s.startsWith("-search_term")) {
 					searchTerm = s.split("=")[1];
-					break;
+					continue;
 				}
 				if (s.startsWith("-category")) {
 					category = Integer.parseInt(s.split("=")[1]);
-					break;
+					continue;
 				}
 				if (s.startsWith("-offset")) {
 					offset = Integer.parseInt(s.split("=")[1]);
-					break;
+					continue;
 				}
 				if (s.startsWith("-result_size")) {
 					resultSize = Integer.parseInt(s.split("=")[1]);
-					break;
+					continue;
 				}
 			}
 
@@ -154,18 +170,24 @@ enum Command {
 			MarketData[] results = MarketData.getSearchResults(searchTerm.split(","), sortType, category, offset,
 					offset + resultSize);
 
+			ArrayList<String> text = new ArrayList<>();
 			// Prints the results to the console
 			System.out.println();
-			System.out.println("Results: ");
+			String output = "Results: ";
+			System.out.println(output);
 			for (int i = 0; i < results.length; i++) {
 
 				// Calculated the percentage of profit compared to the highest profitability
 				double profitability = (long) ((results[i].getProfitability()
 						/ MarketData.getHighestSearchProfitability()) * 10000) / 100.0;
-				System.out.println(results[i].getName() + " - " + profitability + "% - "
-						+ (int) results[i].getAverageGilPerUnit() + " x " + (int) results[i].getAverageStackSize());
+				output = results[i].getName() + " - " + profitability + "% - " + (int) results[i].getAverageGilPerUnit()
+						+ " x " + (int) results[i].getAverageStackSize();
+				System.out.println(output);
+				text.add(output);
 			}
 			System.out.println();
+
+			return text.toArray(new String[text.size()]);
 		}
 
 		@Override
@@ -175,7 +197,7 @@ enum Command {
 
 	};
 
-	public abstract void run(String[] args);
+	public abstract String[] run(String[] args);
 
 	public abstract String getDescription();
 
