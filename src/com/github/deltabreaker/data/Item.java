@@ -49,4 +49,8 @@ public class Item {
 		return ids;
 	}
 
+	public static void clearItemData() {
+		itemTable.clear();
+	}
+
 }

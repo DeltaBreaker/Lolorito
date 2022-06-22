@@ -19,6 +19,7 @@ public class FileManager {
 
 	public static String loadCSVData(String file) {
 		try {
+			Item.clearItemData();
 			return readCSVData(new FileReader(file));
 		} catch (FileNotFoundException e) {
 			return " [FileManager]: Error reading CSV data.";
