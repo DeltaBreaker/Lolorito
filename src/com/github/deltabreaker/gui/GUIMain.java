@@ -128,7 +128,7 @@ public class GUIMain extends JFrame {
 		categories.setBounds(10, 195, uiWidth, 20);
 		add(categories);
 
-		JLabel searchLabel = new JLabel("Seach");
+		JLabel searchLabel = new JLabel("Search");
 		searchLabel.setBounds(10, 225, uiWidth, 20);
 		searchLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(searchLabel);
