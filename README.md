@@ -9,4 +9,5 @@ When its done you can pick what category (these are also from XIVAPI; some are e
 Finally just press search and the results will appar on the right.
 The results are formatted most profitable top to bottom as: (item name) - (profitability %/100) - (average price) x (average size)
 
-Ex:![image](https://user-images.githubusercontent.com/6527156/175795834-17d95f4d-fc21-4bf4-b636-e2c6019048cc.png)
+Ex:!
+[image](https://user-images.githubusercontent.com/6527156/175795834-17d95f4d-fc21-4bf4-b636-e2c6019048cc.png)
