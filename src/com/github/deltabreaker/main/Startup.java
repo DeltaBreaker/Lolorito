@@ -13,6 +13,7 @@ public class Startup {
 			}
 		} else {
 			FileManager.loadCSVData(Startup.class.getClassLoader().getResourceAsStream("Item.txt"));
+			FileManager.loadCategories(Startup.class.getClassLoader().getResourceAsStream("Categories.json"));
 			new GUIMain();
 		}
 	}

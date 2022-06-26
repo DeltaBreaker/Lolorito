@@ -2,23 +2,26 @@ package com.github.deltabreaker.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 
 import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
@@ -40,25 +43,17 @@ public class GUIMain extends JFrame {
 			"Mandragora", "Masamune", "Pandaemonium", "Shinryu", "Titan", "Bismarck", "Ravana", "Sephirot", "Sophia",
 			"Zurvan" };
 
-	public static final String[] CATEGORIES = { "All", "Primary Arms", "Primary Tools", "Primary Tools", "Armor",
-			"Accessories", "Medicines", "Materials", "Other", "Pugilist's Arms", "Gladiator's Arms", "Marauder's Arms",
-			"Archer's Arms", "Lancer's Arms", "Thaumaturge's Arms", "Conjurer's Arms", "Arcanist's Arms", "Shields",
-			"Dancer's Arms", "Carpenter's Tools", "Blacksmith's Tools", "Armorer's Tools", "Goldsmith's Tools",
-			"Leatherworker's Tools", "Weaver's Tools", "Alchemist's Tools", "Culinarian's Tools", "Miner's Tools",
-			"Botanist's Tools", "Fisher's Tools", "Fishing Tackle", "Head", "Undershirts", "Body", "Undergarments",
-			"Legs", "Hands", "Feet", "Waist", "Necklaces", "Earrings", "Bracelets", "Rings", "Medicine", "Ingredients",
-			"Meals", "Seafood", "Stone", "Metal", "Lumber", "Cloth", "Leather", "Bone", "Reagents", "Dyes",
-			"Weapon Parts", "Furnishings", "Materia", "Crystals", "Catalysts", "Miscellany", "Soul Crystals", "Arrows",
-			"Quest Items", "Other", "Exterior Fixtures", "Interior Fixtures", "Outdoor Furnishings", "Chairs and Beds",
-			"Tables", "Tabletop", "Wall-mounted", "Rugs", "Rogue's Arms", "Seasonal Miscellany", "Minions",
-			"Dark Knight's Arms", "Machinist's Arms", "Astrologian's Arms", "Airship/Submersible Components",
-			"Orchestrion Components", "Gardening Items", "Paintings", "Samurai's Arms", "Red Mage's Arms",
-			"Scholar's Arms", "Gunbreaker's Arms", "Dancer's Arms", "Reaper's Arms", "Sage's Arms" };
+	public static final String[] RESULTS_TABLE_COLUMNS = { "Name", "Avg. Price", "Total Sold", "# of Listings",
+			"Lowest Listed Price" };
+
+	public static final String[] SORT_TYPES = { "Total Profit", "Avg. Price", "Total Sold", "Listed Price" };
 
 	private static final Border BORDER = BorderFactory.createLineBorder(Color.BLACK);
 
-	private Dimension windowSize = new Dimension(840, 640);
+	private Dimension windowSize = new Dimension(1280, 720);
 	private int uiWidth = 225;
+
+	private JCheckBox[] categories;
 
 	public GUIMain() {
 		setTitle(WINDOW_TITLE);
@@ -91,42 +86,112 @@ public class GUIMain extends JFrame {
 		resultsPane.setAlignmentY(JScrollPane.RIGHT_ALIGNMENT);
 		add(resultsPane);
 
-		JTextPane results = new JTextPane();
+		JTable results = new JTable(new DefaultTableModel(new String[][] {}, RESULTS_TABLE_COLUMNS));
 		results.setBounds(0, 0, resultsPane.getWidth(), resultsPane.getHeight());
-		results.setBackground(new Color(238, 238, 238));
-		results.setFont(results.getFont().deriveFont(Font.BOLD));
-		results.setFocusable(false);
-		results.setEditable(false);
-		results.setText("Results: ");
+		results.setEnabled(false);
 		resultsPane.setViewportView(results);
 
-		JLabel recentcyLabel = new JLabel("Recentcy: 24 hours");
-		recentcyLabel.setBounds(10, 70, uiWidth, 20);
-		recentcyLabel.setHorizontalAlignment(JLabel.CENTER);
-		add(recentcyLabel);
-
-		JSlider recentcy = new JSlider();
-		recentcy.setBounds(10, 90, uiWidth, 20);
-		recentcy.setMinimum(1);
-		recentcy.setMaximum(168);
-		recentcy.setValue(24);
-		recentcy.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				recentcyLabel
-						.setText("Recentcy: " + recentcy.getValue() + " hour" + ((recentcy.getValue() > 1) ? "s" : ""));
-			}
-		});
-		add(recentcy);
-
 		JLabel categoriesLabel = new JLabel("Categories");
-		categoriesLabel.setBounds(10, 170, uiWidth, 20);
+		categoriesLabel.setBounds(uiWidth + 20, 5, uiWidth, 20);
 		categoriesLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(categoriesLabel);
 
-		JComboBox<String> categories = new JComboBox<>(CATEGORIES);
-		categories.setBounds(10, 195, uiWidth, 20);
-		add(categories);
+		JLabel includeLabel = new JLabel("Included");
+		includeLabel.setBounds(uiWidth + 20 + uiWidth - 70, 5, uiWidth, 20);
+		includeLabel.setHorizontalAlignment(JLabel.LEFT);
+		add(includeLabel);
+
+		JScrollPane categoryScrollPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		categoryScrollPane.setBounds(uiWidth + 20, 30, uiWidth, windowSize.height - 108);
+		categoryScrollPane.setAlignmentY(JScrollPane.RIGHT_ALIGNMENT);
+		add(categoryScrollPane);
+
+		JPanel categoryPane = new JPanel();
+		categoryPane.setPreferredSize(new Dimension(uiWidth, Item.getCategoryAmount() * 30));
+		categoryPane.setLayout(null);
+		categoryScrollPane.setViewportView(categoryPane);
+
+		String[] names = Item.getCategories();
+		categories = new JCheckBox[Item.getCategoryAmount()];
+		for (int i = 0; i < categories.length; i++) {
+			JLabel label = new JLabel(names[i]);
+			label.setBounds(10, 5 + 30 * i, uiWidth - uiWidth / 3, 20);
+			label.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+			categoryPane.add(label);
+
+			categories[i] = new JCheckBox();
+			categories[i].setBounds(uiWidth - 45, 10 + i * 30, 20, 20);
+			categories[i].setSelected(true);
+			categoryPane.add(categories[i]);
+		}
+
+		JButton all = new JButton("All");
+		all.setBounds(uiWidth + 20, (int) windowSize.getHeight() - 69, uiWidth / 2 - 10, 20);
+		all.setFocusable(false);
+		all.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (JCheckBox j : categories) {
+					j.setSelected(true);
+				}
+			}
+
+		});
+		add(all);
+
+		JButton none = new JButton("None");
+		none.setBounds(uiWidth + 30 + uiWidth / 2, (int) windowSize.getHeight() - 69, uiWidth / 2 - 10, 20);
+		none.setFocusable(false);
+		none.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (JCheckBox j : categories) {
+					j.setSelected(false);
+				}
+			}
+
+		});
+		add(none);
+
+		JLabel recencyLabel = new JLabel("Recency: 24 hours");
+		recencyLabel.setBounds(10, 70, uiWidth, 20);
+		recencyLabel.setHorizontalAlignment(JLabel.CENTER);
+		add(recencyLabel);
+
+		JSlider recency = new JSlider();
+		recency.setBounds(10, 90, uiWidth, 20);
+		recency.setMinimum(1);
+		recency.setMaximum(168);
+		recency.setValue(24);
+		recency.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				recencyLabel
+						.setText("Recency: " + recency.getValue() + " hour" + ((recency.getValue() > 1) ? "s" : ""));
+			}
+		});
+		add(recency);
+
+		JLabel sortLabel = new JLabel("Sort Type");
+		sortLabel.setBounds(10, 165, uiWidth, 20);
+		sortLabel.setHorizontalAlignment(JLabel.LEFT);
+		add(sortLabel);
+
+		JComboBox<String> sortTypes = new JComboBox<>(SORT_TYPES);
+		sortTypes.setBounds(10, 195, uiWidth, 20);
+		sortTypes.setFocusable(false);
+		sortTypes.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+
+		});
+		add(sortTypes);
 
 		JLabel searchLabel = new JLabel("Search");
 		searchLabel.setBounds(10, 225, uiWidth, 20);
@@ -152,7 +217,7 @@ public class GUIMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JOptionPane.showMessageDialog(update, "Updating market data. This may take a while.");
-					new Thread(new GUIMarketUpdateThread(recentcy.getValue() * 3600, update.getParent())).start();
+					new Thread(new GUIMarketUpdateThread(recency.getValue() * 3600, update.getParent())).start();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -168,23 +233,19 @@ public class GUIMain extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MarketData[] searchResults = MarketData.getSearchResults(search.getText().split(","), "profit",
-						categories.getSelectedIndex(), 0, Item.getItemListSize());
+				MarketData[] searchResults = MarketData.getSearchResults(search.getText().split(","),
+						(String) sortTypes.getSelectedItem(), getCategoryList(), 0, Item.getItemListSize());
 
-				StringBuilder builder = new StringBuilder();
-				builder.append("Results:\n");
-
-				for (int i = 0; i < searchResults.length; i++) {
-
-					// Calculated the percentage of profit compared to the highest profitability
-					double profitability = (long) ((searchResults[i].getProfitability()
-							/ MarketData.getHighestSearchProfitability()) * 10000) / 100.0;
-					builder.append("\n" + searchResults[i].getName() + " - " + profitability + "% - "
-							+ (int) searchResults[i].getAverageGilPerUnit() + "g x "
-							+ (int) searchResults[i].getAverageStackSize());
+				DefaultTableModel model = (DefaultTableModel) results.getModel();
+				for (int i = model.getRowCount() - 1; i >= 0; i--) {
+					model.removeRow(i);
 				}
-
-				results.setText(builder.toString());
+				for (int i = 0; i < searchResults.length; i++) {
+					model.addRow(new String[] { searchResults[i].getName(),
+							(int) (searchResults[i].getAverageGilPerUnit() * 100.0) / 100.0 + "g",
+							"" + searchResults[i].getTotalSold(), "" + searchResults[i].getListingAmount(),
+							"" + searchResults[i].getLowestListedPrice() });
+				}
 			}
 
 		});
@@ -207,6 +268,21 @@ public class GUIMain extends JFrame {
 				e1.printStackTrace();
 			}
 		}
+	}
+
+	private long[] getCategoryList() {
+		String[] names = Item.getCategories();
+		ArrayList<Long> categories = new ArrayList<>();
+		for (int i = 0; i < this.categories.length; i++) {
+			if (this.categories[i].isSelected()) {
+				categories.add(Item.getCategoryID(names[i]));
+			}
+		}
+		long[] results = new long[categories.size()];
+		for (int i = 0; i < results.length; i++) {
+			results[i] = categories.get(i);
+		}
+		return results;
 	}
 
 }

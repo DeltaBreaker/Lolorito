@@ -8,6 +8,10 @@ import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import com.github.deltabreaker.data.Item;
 import com.opencsv.CSVReader;
 
@@ -67,6 +71,20 @@ public class FileManager {
 			return true;
 		} catch (NumberFormatException e) {
 			return false;
+		}
+	}
+
+	public static void loadCategories(InputStream resourceAsStream) {
+		try {
+			JSONArray file = (JSONArray) new JSONParser().parse(new InputStreamReader(resourceAsStream));
+			for (int i = 0; i < file.size(); i++) {
+				JSONObject category = (JSONObject) file.get(i);
+				Item.createCategory((String) category.get("name"), (long) category.get("id"));
+			}
+			System.out.println(LocalDateTime.now() + " [FileManager]: " + Item.getCategoryAmount() + " categories loaded.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading category data.");
 		}
 	}
 

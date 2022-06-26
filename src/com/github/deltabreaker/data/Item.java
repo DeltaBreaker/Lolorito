@@ -2,10 +2,13 @@ package com.github.deltabreaker.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Item {
 
 	private static HashMap<Long, Item> itemTable = new HashMap<>();
+	private static Map<String, Long> categories = new LinkedHashMap<>();
 
 	private long id;
 	private String name;
@@ -51,6 +54,22 @@ public class Item {
 
 	public static void clearItemData() {
 		itemTable.clear();
+	}
+
+	public static void createCategory(String name, long id) {
+		categories.put(name, id);
+	}
+
+	public static int getCategoryAmount() {
+		return categories.size();
+	}
+
+	public static String[] getCategories() {
+		return categories.keySet().toArray(new String[categories.size()]);
+	}
+
+	public static long getCategoryID(String string) {
+		return categories.get(string);
 	}
 
 }

@@ -17,7 +17,7 @@ import com.github.deltabreaker.gui.GUIMain;
 
 public class WebManager {
 
-	public static final String BASE_URL = "https://universalis.app/api/history/";
+	public static final String BASE_URL = "https://universalis.app/api/";
 	public static final long DEFAULT_RESULTS_SIZE = 200;
 	public static final long DEFAULT_RECENTCY = 86400;
 	public static final long URL_ID_LIMIT = 100;
@@ -30,7 +30,8 @@ public class WebManager {
 	private static String get(String url, long timeout) throws Exception {
 		URL website = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) website.openConnection();
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+		connection.setRequestProperty("User-Agent",
+				"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
 
 		StringBuilder response = new StringBuilder();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
@@ -72,20 +73,26 @@ public class WebManager {
 
 								long itemID = (long) item.get("itemID");
 
-								JSONArray entries = (JSONArray) item.get("entries");
+								JSONArray listings = (JSONArray) item.get("listings");
+								long[] listingPrices = new long[listings.size()];
+								for (int e = 0; e < listings.size(); e++) {
+									JSONObject listing = (JSONObject) listings.get(e);
+
+									listingPrices[e] = (long) listing.get("pricePerUnit");
+								}
+
+								JSONArray entries = (JSONArray) item.get("recentHistory");
 								long[] pricesPerUnit = new long[entries.size()];
 								long[] quantities = new long[entries.size()];
-								long[] saleTimes = new long[entries.size()];
 								for (int e = 0; e < entries.size(); e++) {
 									JSONObject entry = (JSONObject) entries.get(e);
 
 									pricesPerUnit[e] = (long) entry.get("pricePerUnit");
 									quantities[e] = (long) entry.get("quantity");
-									saleTimes[e] = (long) entry.get("timestamp");
 								}
 
 								MarketData.update(itemID, Item.getItem(itemID).getCategory(), pricesPerUnit, quantities,
-										saleTimes);
+										listingPrices);
 							} catch (Exception e) {
 								System.out.println(LocalDateTime.now() + " [WebHandler]: Null data. Skipping item");
 							}

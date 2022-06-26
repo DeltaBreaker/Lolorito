@@ -1,0 +1,294 @@
+[
+	{
+		"name": "Pugilist's Arms",
+		"id": 9
+	},
+	{
+		"name": "Gladiator's Arms",
+		"id": 10
+	},
+	{
+		"name": "Marauder's Arms",
+		"id": 11
+	},
+	{
+		"name": "Archer's Arms",
+		"id": 12
+	},
+	{
+		"name": "Lancer's Arms",
+		"id": 13
+	},
+	{
+		"name": "Thaumaturge's Arms",
+		"id": 14
+	},
+	{
+		"name": "Conjurer's Arms",
+		"id": 15
+	},
+	{
+		"name": "Arcanist's Arms",
+		"id": 16
+	},
+	{
+		"name": "Rogue's Arms",
+		"id": 73
+	},
+	{
+		"name": "Shields",
+		"id": 17
+	},
+	{
+		"name": "Dancer's Arms",
+		"id": 107
+	},
+	{
+		"name": "Dark Knight's Arms",
+		"id": 76
+	},
+	{
+		"name": "Machinist's Arms",
+		"id": 77
+	},
+	{
+		"name": "Astrologian's Arms",
+		"id": 78
+	},
+	{
+		"name": "Samurai's Arms",
+		"id": 83
+	},
+	{
+		"name": "Red Mage's Arms",
+		"id": 84
+	},
+	{
+		"name": "Scholar's Arms",
+		"id": 85
+	},
+	{
+		"name": "Gunbreaker's Arms",
+		"id": 86
+	},
+	{
+		"name": "Reaper's Arms",
+		"id": 88
+	},
+	{
+		"name": "Sage's Arms",
+		"id": 89
+	},
+	{
+		"name": "Carpenter's Tools",
+		"id": 19
+	},
+	{
+		"name": "Blacksmith's Tools",
+		"id": 20
+	},
+	{
+		"name": "Armorer's Tools",
+		"id": 21
+	},
+	{
+		"name": "Goldsmith's Tools",
+		"id": 22
+	},
+	{
+		"name": "Leatherworker's Tools",
+		"id": 23
+	},
+	{
+		"name": "Weaver's Tools",
+		"id": 24
+	},
+	{
+		"name": "Alchemist's Tools",
+		"id": 25
+	},
+	{
+		"name": "Culinarian's Tools",
+		"id": 26
+	},
+	{
+		"name": "Miner's Tools",
+		"id": 27
+	},
+	{
+		"name": "Botanist's Tools",
+		"id": 28
+	},
+	{
+		"name": "Fisher's Tools",
+		"id": 29
+	},
+	{
+		"name": "Fishing Tackle",
+		"id": 30
+	},
+	{
+		"name": "Head",
+		"id": 31
+	},
+	{
+		"name": "Body",
+		"id": 33
+	},
+	{
+		"name": "Legs",
+		"id": 35
+	},
+	{
+		"name": "Hands",
+		"id": 36
+	},
+	{
+		"name": "Feet",
+		"id": 37
+	},
+	{
+		"name": "Necklaces",
+		"id": 39
+	},
+	{
+		"name": "Earrings",
+		"id": 40
+	},
+	{
+		"name": "Bracelets",
+		"id": 41
+	},
+	{
+		"name": "Rings",
+		"id": 42
+	},
+	{
+		"name": "Medicine",
+		"id": 43
+	},
+	{
+		"name": "Ingredients",
+		"id": 44
+	},
+	{
+		"name": "Meals",
+		"id": 45
+	},
+	{
+		"name": "Seafood",
+		"id": 46
+	},
+	{
+		"name": "Stone",
+		"id": 47
+	},
+	{
+		"name": "Metal",
+		"id": 48
+	},
+	{
+		"name": "Lumber",
+		"id": 49
+	},
+	{
+		"name": "Cloth",
+		"id": 50
+	},
+	{
+		"name": "Leather",
+		"id": 51
+	},
+	{
+		"name": "Bone",
+		"id": 52
+	},
+	{
+		"name": "Reagents",
+		"id": 53
+	},
+	{
+		"name": "Dyes",
+		"id": 54
+	},
+	{
+		"name": "Weapon Parts",
+		"id": 55
+	},
+	{
+		"name": "Furnishings",
+		"id": 56
+	},
+	{
+		"name": "Materia",
+		"id": 57
+	},
+	{
+		"name": "Crystals",
+		"id": 58
+	},
+	{
+		"name": "Catalysts",
+		"id": 59
+	},
+	{
+		"name": "Miscellany",
+		"id": 60
+	},
+	{
+		"name": "Exterior Fixtures",
+		"id": 65
+	},
+	{
+		"name": "Interior Fixtures",
+		"id": 66
+	},
+	{
+		"name": "Outdoor Furnishings",
+		"id": 67
+	},
+	{
+		"name": "Chairs and Beds",
+		"id": 68
+	},
+	{
+		"name": "Tables",
+		"id": 69
+	},
+	{
+		"name": "Tabletop",
+		"id": 70
+	},
+	{
+		"name": "Wall-mounted",
+		"id": 71
+	},
+	{
+		"name": "Rugs",
+		"id": 72
+	},
+	{
+		"name": "Seasonal Miscellany",
+		"id": 74
+	},
+	{
+		"name": "Minions",
+		"id": 75
+	},
+	{
+		"name": "Airship/Submersible Components",
+		"id": 79
+	},
+	{
+		"name": "Orchestrion Components",
+		"id": 80
+	},
+	{
+		"name": "Gardening Items",
+		"id": 81
+	},
+	{
+		"name": "Paintings",
+		"id": 82
+	}
+]

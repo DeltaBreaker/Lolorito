@@ -167,7 +167,7 @@ enum Command {
 
 			// Searched the market data for a list of items matching the terms given
 			// (sorted)
-			MarketData[] results = MarketData.getSearchResults(searchTerm.split(","), sortType, category, offset,
+			MarketData[] results = MarketData.getSearchResults(searchTerm.split(","), sortType, new long[] {}, offset,
 					offset + resultSize);
 
 			ArrayList<String> text = new ArrayList<>();
@@ -178,10 +178,8 @@ enum Command {
 			for (int i = 0; i < results.length; i++) {
 
 				// Calculated the percentage of profit compared to the highest profitability
-				double profitability = (long) ((results[i].getProfitability()
-						/ MarketData.getHighestSearchProfitability()) * 10000) / 100.0;
-				output = results[i].getName() + " - " + profitability + "% - " + (int) results[i].getAverageGilPerUnit()
-						+ " x " + (int) results[i].getAverageStackSize();
+				output = results[i].getName() + (int) results[i].getAverageGilPerUnit() + " x "
+						+ (int) results[i].getAverageStackSize();
 				System.out.println(output);
 				text.add(output);
 			}
