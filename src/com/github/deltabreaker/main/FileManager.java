@@ -16,6 +16,7 @@ public class FileManager {
 	public static final int ID_LOCATION = 0;
 	public static final int NAME_LOCATION = 10;
 	public static final int CATEGORY_LOCATION = 17;
+	public static final int TRADABLE_LOCATION = 23;
 
 	public static String loadCSVData(String file) {
 		try {
@@ -42,7 +43,8 @@ public class FileManager {
 			}
 
 			for (String[] s : lines) {
-				if (isNumeric(s[0]) && !s[NAME_LOCATION].trim().equals("")) {
+				if (isNumeric(s[0]) && !s[NAME_LOCATION].trim().equals("")
+						&& !Boolean.parseBoolean(s[TRADABLE_LOCATION])) {
 					Item.loadItem(new Item(Long.parseLong(s[ID_LOCATION]), s[NAME_LOCATION],
 							Long.parseLong(s[CATEGORY_LOCATION])));
 				}

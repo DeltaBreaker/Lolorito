@@ -2,8 +2,8 @@ package com.github.deltabreaker.main;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -29,20 +29,22 @@ public class WebManager {
 
 	private static String get(String url, long timeout) throws Exception {
 		URL website = new URL(url);
-		URLConnection connection = website.openConnection();
-		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		HttpURLConnection connection = (HttpURLConnection) website.openConnection();
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+
 		StringBuilder response = new StringBuilder();
-		String inputLine;
-		while ((inputLine = in.readLine()) != null)
-			response.append(inputLine);
-		in.close();
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			for (String line; (line = reader.readLine()) != null;) {
+				response.append(line);
+			}
+		}
 		return response.toString();
 	}
 
 	public static void updateResults(ArrayList<Long> idArray, long resultLimit, long recentcy) throws Exception {
 		if (server != null) {
 			System.out.println(LocalDateTime.now() + " [WebHandler]: Updating market data. Result limit: " + resultLimit
-					+ " | Recentcy: " + recentcy);
+					+ " | Recentcy: " + recentcy + " | URL Limit: " + URL_ID_LIMIT);
 			isUpdating = true;
 			while (idArray.size() > 0) {
 				try {
