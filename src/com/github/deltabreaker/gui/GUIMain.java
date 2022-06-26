@@ -100,24 +100,24 @@ public class GUIMain extends JFrame {
 		results.setText("Results: ");
 		resultsPane.setViewportView(results);
 
-		JLabel recentcyLabel = new JLabel("Recentcy: 24 hours");
-		recentcyLabel.setBounds(10, 70, uiWidth, 20);
-		recentcyLabel.setHorizontalAlignment(JLabel.CENTER);
-		add(recentcyLabel);
+		JLabel recencyLabel = new JLabel("Recency: 24 hours");
+		recencyLabel.setBounds(10, 70, uiWidth, 20);
+		recencyLabel.setHorizontalAlignment(JLabel.CENTER);
+		add(recencyLabel);
 
-		JSlider recentcy = new JSlider();
-		recentcy.setBounds(10, 90, uiWidth, 20);
-		recentcy.setMinimum(1);
-		recentcy.setMaximum(168);
-		recentcy.setValue(24);
-		recentcy.addChangeListener(new ChangeListener() {
+		JSlider recency = new JSlider();
+		recency.setBounds(10, 90, uiWidth, 20);
+		recency.setMinimum(1);
+		recency.setMaximum(168);
+		recency.setValue(24);
+		recency.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				recentcyLabel
-						.setText("Recentcy: " + recentcy.getValue() + " hour" + ((recentcy.getValue() > 1) ? "s" : ""));
+						.setText("Recency: " + recentcy.getValue() + " hour" + ((recentcy.getValue() > 1) ? "s" : ""));
 			}
 		});
-		add(recentcy);
+		add(recency);
 
 		JLabel categoriesLabel = new JLabel("Categories");
 		categoriesLabel.setBounds(10, 170, uiWidth, 20);
@@ -128,7 +128,7 @@ public class GUIMain extends JFrame {
 		categories.setBounds(10, 195, uiWidth, 20);
 		add(categories);
 
-		JLabel searchLabel = new JLabel("Seach");
+		JLabel searchLabel = new JLabel("Search");
 		searchLabel.setBounds(10, 225, uiWidth, 20);
 		searchLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(searchLabel);
