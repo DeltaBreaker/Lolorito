@@ -113,8 +113,8 @@ public class GUIMain extends JFrame {
 		recency.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				recentcyLabel
-						.setText("Recency: " + recentcy.getValue() + " hour" + ((recentcy.getValue() > 1) ? "s" : ""));
+				recencyLabel
+						.setText("Recency: " + recency.getValue() + " hour" + ((recency.getValue() > 1) ? "s" : ""));
 			}
 		});
 		add(recency);
@@ -152,7 +152,7 @@ public class GUIMain extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JOptionPane.showMessageDialog(update, "Updating market data. This may take a while.");
-					new Thread(new GUIMarketUpdateThread(recentcy.getValue() * 3600, update.getParent())).start();
+					new Thread(new GUIMarketUpdateThread(recency.getValue() * 3600, update.getParent())).start();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
