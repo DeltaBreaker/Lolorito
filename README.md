@@ -8,7 +8,7 @@ First just select what server you want to pull market data for, pick how far bac
 
 When its done you can pick what category (these are also from XIVAPI; some are empty) to search in and any search term you'd like to use.
 
-Finally just press search and the results will appar on the right.
+Finally just press search and the results will appar on the right. You can search as many times as you'd like. Updating the market data only needs to be done once.
 
 The results are formatted most profitable top to bottom as: (item name) - (profitability %/100) - (average price) x (average size)
 
