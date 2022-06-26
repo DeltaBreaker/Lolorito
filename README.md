@@ -6,15 +6,13 @@ It takes the item data from [XIVAPI](https://github.com/xivapi/ffxiv-datamining)
 ## Getting Started
 First just select what server you want to pull market data for, pick how far back you want the data to go, press update, and wait for it to finish updating.
 
-When its done you can pick what category (these are also from XIVAPI; some are empty) to search in and any search term you'd like to use.
+When its done you can pick what categories to search in and any search term and sort type you'd like to use.
 
 Finally just press search and the results will appar on the right. You can search as many times as you'd like. Updating the market data only needs to be done once.
 
-The results are formatted most profitable top to bottom as: (item name) - (profitability %/100) - (average price) x (average size)
-
 Example:
 
-![image](https://user-images.githubusercontent.com/6527156/175795834-17d95f4d-fc21-4bf4-b636-e2c6019048cc.png)
+![image](https://user-images.githubusercontent.com/6527156/175817825-9950491d-caf4-458f-a670-b42742eb31f4.png)
 
 ## Downloads
 See the "Releases" page [here](https://github.com/DeltaBreaker/Lolorito/releases)
