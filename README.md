@@ -1,5 +1,5 @@
 # Lolorito
-Lolorito is a tool for sifting though market data in FFXIV **(requires Java 1.8 or later)**
+Lolorito is a tool for sifting though market data in FFXIV **(requires Java 1.8)**
 
 It takes the item data from [XIVAPI](https://github.com/xivapi/ffxiv-datamining) and uses the market data from [Universalis](https://universalis.app/) to find the current most profitable items to sell on the market. It takes into account both how much items cost and how quickly they sell. Sometimes a larger quantity of a lower cost item can out perform a lot of high-price items that rarely sell.
 
