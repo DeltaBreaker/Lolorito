@@ -15,3 +15,6 @@ The results are formatted most profitable top to bottom as: (item name) - (profi
 Example:
 
 ![image](https://user-images.githubusercontent.com/6527156/175795834-17d95f4d-fc21-4bf4-b636-e2c6019048cc.png)
+
+## Downloads
+See the "Releases" page [here](https://github.com/DeltaBreaker/Lolorito/releases)
