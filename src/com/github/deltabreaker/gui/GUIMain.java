@@ -262,6 +262,8 @@ public class GUIMain extends JFrame {
 				updateLabel.setText("");
 			}
 
+			repaint();
+
 			try {
 				Thread.sleep(16L);
 			} catch (InterruptedException e1) {
