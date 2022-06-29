@@ -75,10 +75,12 @@ public class WebManager {
 
 								JSONArray listings = (JSONArray) item.get("listings");
 								long[] listingPrices = new long[listings.size()];
+								boolean[] isHQ = new boolean[listings.size()];
 								for (int e = 0; e < listings.size(); e++) {
 									JSONObject listing = (JSONObject) listings.get(e);
 
 									listingPrices[e] = (long) listing.get("pricePerUnit");
+									isHQ[e] = (boolean) listing.get("hq");
 								}
 
 								JSONArray entries = (JSONArray) item.get("recentHistory");
@@ -92,7 +94,7 @@ public class WebManager {
 								}
 
 								MarketData.update(itemID, Item.getItem(itemID).getCategory(), pricesPerUnit, quantities,
-										listingPrices);
+										listingPrices, isHQ);
 							} catch (Exception e) {
 								System.out.println(LocalDateTime.now() + " [WebHandler]: Null data. Skipping item");
 							}

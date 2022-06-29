@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import com.github.deltabreaker.data.Item;
-import com.github.deltabreaker.data.MarketData;
 
 public class CommandManager implements Runnable {
 
@@ -127,70 +126,6 @@ enum Command {
 		@Override
 		public String getDescription() {
 			return "update - Updates the market data. Args: -results_limit=(int), -recentcy_limit=(int)";
-		}
-
-	},
-
-	search {
-
-		@Override
-		public String[] run(String[] args) {
-
-			// Sets up and searches for args given
-			String sortType = "";
-			String searchTerm = "";
-			int category = 0;
-			int offset = 0;
-			int resultSize = 20;
-			for (String s : args) {
-				if (s.startsWith("-sort_type")) {
-					sortType = s.split("=")[1];
-					continue;
-				}
-				if (s.startsWith("-search_term")) {
-					searchTerm = s.split("=")[1];
-					continue;
-				}
-				if (s.startsWith("-category")) {
-					category = Integer.parseInt(s.split("=")[1]);
-					continue;
-				}
-				if (s.startsWith("-offset")) {
-					offset = Integer.parseInt(s.split("=")[1]);
-					continue;
-				}
-				if (s.startsWith("-result_size")) {
-					resultSize = Integer.parseInt(s.split("=")[1]);
-					continue;
-				}
-			}
-
-			// Searched the market data for a list of items matching the terms given
-			// (sorted)
-			MarketData[] results = MarketData.getSearchResults(searchTerm.split(","), sortType, new long[] {}, offset,
-					offset + resultSize);
-
-			ArrayList<String> text = new ArrayList<>();
-			// Prints the results to the console
-			System.out.println();
-			String output = "Results: ";
-			System.out.println(output);
-			for (int i = 0; i < results.length; i++) {
-
-				// Calculated the percentage of profit compared to the highest profitability
-				output = results[i].getName() + (int) results[i].getAverageGilPerUnit() + " x "
-						+ (int) results[i].getAverageStackSize();
-				System.out.println(output);
-				text.add(output);
-			}
-			System.out.println();
-
-			return text.toArray(new String[text.size()]);
-		}
-
-		@Override
-		public String getDescription() {
-			return "search - Displays a list of the most profitable items currently sold. \nArgs: \n-search_term=(string,string...), \n-category=(int) \n-result_size=(int) \n-offset=(int) \n-sort_type=(string)";
 		}
 
 	};

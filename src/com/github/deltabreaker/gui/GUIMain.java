@@ -44,9 +44,9 @@ public class GUIMain extends JFrame {
 			"Zurvan" };
 
 	public static final String[] RESULTS_TABLE_COLUMNS = { "Name", "Avg. Price", "Total Sold", "# of Listings",
-			"Lowest Listed Price" };
+			"Lowest NQ Price", "Lowest HQ Price" };
 
-	public static final String[] SORT_TYPES = { "Total Profit", "Avg. Price", "Total Sold", "Listed Price" };
+	public static final String[] SORT_TYPES = { "Total Profit", "Avg. Price", "Total Sold", "Listed NQ Price", "Listed HQ Price" };
 
 	private static final Border BORDER = BorderFactory.createLineBorder(Color.BLACK);
 
@@ -82,13 +82,14 @@ public class GUIMain extends JFrame {
 
 		JScrollPane resultsPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		resultsPane.setBounds(windowSize.width / 2, 0, windowSize.width / 2 - 15, windowSize.height - 38);
+		resultsPane.setBounds(windowSize.width / 2 - 150, 0, windowSize.width / 2 + 135, windowSize.height - 38);
 		resultsPane.setAlignmentY(JScrollPane.RIGHT_ALIGNMENT);
 		add(resultsPane);
 
 		JTable results = new JTable(new DefaultTableModel(new String[][] {}, RESULTS_TABLE_COLUMNS));
 		results.setBounds(0, 0, resultsPane.getWidth(), resultsPane.getHeight());
 		results.setEnabled(false);
+		results.getColumnModel().getColumn(2).setPreferredWidth(20);
 		resultsPane.setViewportView(results);
 
 		JLabel categoriesLabel = new JLabel("Categories");
@@ -244,7 +245,7 @@ public class GUIMain extends JFrame {
 					model.addRow(new String[] { searchResults[i].getName(),
 							(int) (searchResults[i].getAverageGilPerUnit() * 100.0) / 100.0 + "g",
 							"" + searchResults[i].getTotalSold(), "" + searchResults[i].getListingAmount(),
-							"" + searchResults[i].getLowestListedPrice() });
+							searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice() });
 				}
 			}
 

@@ -49,6 +49,7 @@ public class FileManager {
 			for (String[] s : lines) {
 				if (isNumeric(s[0]) && !s[NAME_LOCATION].trim().equals("")
 						&& !Boolean.parseBoolean(s[TRADABLE_LOCATION])) {
+					if (Item.getItemListSize() < 2000)
 					Item.loadItem(new Item(Long.parseLong(s[ID_LOCATION]), s[NAME_LOCATION],
 							Long.parseLong(s[CATEGORY_LOCATION])));
 				}
