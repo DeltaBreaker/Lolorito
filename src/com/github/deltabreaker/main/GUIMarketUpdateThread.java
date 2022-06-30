@@ -20,7 +20,7 @@ public class GUIMarketUpdateThread implements Runnable {
 	@Override
 	public void run() {
 		try {
-			WebManager.updateResults(Item.getIDList(), WebManager.DEFAULT_RESULTS_SIZE, recentcy);
+			WebManager.updateResults(Item.getMarketableIDList(), WebManager.DEFAULT_RESULTS_SIZE, recentcy);
 			JOptionPane.showMessageDialog(parent, "Market data has been updated.");
 		} catch (Exception e) {
 			e.printStackTrace();

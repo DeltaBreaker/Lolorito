@@ -8,35 +8,52 @@ import java.io.Reader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.github.deltabreaker.data.Item;
+import com.github.deltabreaker.data.Recipe;
 import com.opencsv.CSVReader;
 
 public class FileManager {
 
-	public static final int ID_LOCATION = 0;
-	public static final int NAME_LOCATION = 10;
-	public static final int CATEGORY_LOCATION = 17;
-	public static final int TRADABLE_LOCATION = 23;
+	public static final byte ITEM_ID_LOCATION = 0;
+	public static final byte ITEM_NAME_LOCATION = 10;
+	public static final byte ITEM_CATEGORY_LOCATION = 17;
+	public static final byte ITEM_TRADABLE_LOCATION = 23;
+	public static final byte ITEM_COLLECTABLE_LOCATION = 39;
 
-	public static String loadCSVData(String file) {
+	public static final byte RECIPE_RESULT_LOCATION = 4;
+	public static final byte RECIPE_RESULT_AMOUNT_LOCATION = 5;
+	public static final byte[] RECIPE_MATERIAL_POSITIONS = { 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 };
+	public static final byte[] RECIPE_MATERIAL_AMOUNT_POSITIONS = { 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 };
+	public static final byte RECIPE_IS_EXPERT_LOCATION = 45;
+	public static final byte RECIPE_IS_SPECIALIST_LOCATION = 44;
+	public static final byte RECIPE_CRAFT_TYPE_LOCATION = 2;
+
+	public static void loadCSVItemData(String file) {
 		try {
 			Item.clearItemData();
-			return readCSVData(new FileReader(file));
+			parseItemData(readCSVData(new FileReader(file)));
 		} catch (FileNotFoundException e) {
-			return " [FileManager]: Error reading CSV data.";
+			e.printStackTrace();
+			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading CSV data.");
 		}
 	}
 
-	public static String loadCSVData(InputStream in) {
-		return readCSVData(new InputStreamReader(in));
+	public static void loadCSVItemData(InputStream in) {
+		Item.clearItemData();
+		parseItemData(readCSVData(new InputStreamReader(in)));
 	}
 
-	private static String readCSVData(Reader reader) {
-		String text;
+	public static void loadCSVRecipeData(InputStream in) {
+		Recipe.clearRecipeData();
+		parseRecipeData(readCSVData(new InputStreamReader(in)));
+	}
+
+	private static String[][] readCSVData(Reader reader) {
 		try {
 			ArrayList<String[]> lines = new ArrayList<>();
 			try (CSVReader csvReader = new CSVReader(reader)) {
@@ -46,24 +63,61 @@ public class FileManager {
 				}
 			}
 
-			for (String[] s : lines) {
-				if (isNumeric(s[0]) && !s[NAME_LOCATION].trim().equals("")
-						&& !Boolean.parseBoolean(s[TRADABLE_LOCATION])) {
-					if (Item.getItemListSize() < 2000)
-					Item.loadItem(new Item(Long.parseLong(s[ID_LOCATION]), s[NAME_LOCATION],
-							Long.parseLong(s[CATEGORY_LOCATION])));
-				}
-			}
-
-			text = LocalDateTime.now() + " [FileManager]: " + Item.getItemListSize() + " items loaded";
-			System.out.println(text);
-			return text;
+			System.out.println(LocalDateTime.now() + " [FileManager]: CSV data read.");
+			return lines.toArray(new String[lines.size()][]);
 		} catch (Exception e) {
 			e.printStackTrace();
-			text = LocalDateTime.now() + " [FileManager]: Error reading CSV data.";
-			System.out.println(text);
-			return text;
+			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading CSV data.");
+			return null;
 		}
+	}
+
+	private static void parseItemData(String[][] data) {
+		for (String[] s : data) {
+			if (isNumeric(s[0]) && !s[ITEM_NAME_LOCATION].trim().equals("")
+					&& !Boolean.parseBoolean(s[ITEM_COLLECTABLE_LOCATION])) {
+				Item.loadItem(
+						new Item(Integer.parseInt(s[ITEM_ID_LOCATION]), s[ITEM_NAME_LOCATION],
+								Byte.parseByte(s[ITEM_CATEGORY_LOCATION])),
+						!Boolean.parseBoolean(s[ITEM_TRADABLE_LOCATION]));
+			}
+		}
+
+		System.out.println(LocalDateTime.now() + " [FileManager]: " + Item.getCompleteItemListSize() + " items loaded. "
+				+ Item.getMarketableItemListSize() + " marketable items.");
+	}
+
+	private static void parseRecipeData(String[][] data) {
+		for (String[] s : data) {
+			try {
+				if (isNumeric(s[0]) && Item.hasItemForID(Integer.parseInt(s[RECIPE_RESULT_LOCATION]))) {
+					ArrayList<Integer> materials = new ArrayList<>();
+					ArrayList<Integer> materialAmounts = new ArrayList<>();
+
+					for (int i = 0; i < RECIPE_MATERIAL_POSITIONS.length; i++) {
+						int material = Integer.parseInt(s[RECIPE_MATERIAL_POSITIONS[i]]);
+						int materialAmount = Integer.parseInt(s[RECIPE_MATERIAL_AMOUNT_POSITIONS[i]]);
+
+						if (material > 0 && materialAmount > 0) {
+							materials.add(material);
+							materialAmounts.add(materialAmount);
+						}
+					}
+
+					Recipe.loadRecipe(Integer.parseInt(s[RECIPE_RESULT_LOCATION]),
+							Integer.parseInt(s[RECIPE_RESULT_AMOUNT_LOCATION]),
+							ArrayUtils.toPrimitive(materials.toArray(new Integer[materials.size()])),
+							ArrayUtils.toPrimitive(materialAmounts.toArray(new Integer[materialAmounts.size()])),
+							Boolean.parseBoolean(s[RECIPE_IS_EXPERT_LOCATION]),
+							Boolean.parseBoolean(s[RECIPE_IS_SPECIALIST_LOCATION]),
+							Byte.parseByte(s[RECIPE_CRAFT_TYPE_LOCATION]));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(LocalDateTime.now() + " [FileManager]: Error loading recipe. Skipping.");
+			}
+		}
+		System.out.println(LocalDateTime.now() + " [FileManager]: " + Recipe.getRecipeCount() + " recipes loaded.");
 	}
 
 	private static boolean isNumeric(String str) {
@@ -80,9 +134,10 @@ public class FileManager {
 			JSONArray file = (JSONArray) new JSONParser().parse(new InputStreamReader(resourceAsStream));
 			for (int i = 0; i < file.size(); i++) {
 				JSONObject category = (JSONObject) file.get(i);
-				Item.createCategory((String) category.get("name"), (long) category.get("id"));
+				Item.createCategory((String) category.get("name"), Integer.parseInt((long) category.get("id") + ""));
 			}
-			System.out.println(LocalDateTime.now() + " [FileManager]: " + Item.getCategoryAmount() + " categories loaded.");
+			System.out.println(
+					LocalDateTime.now() + " [FileManager]: " + Item.getCategoryAmount() + " categories loaded.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading category data.");

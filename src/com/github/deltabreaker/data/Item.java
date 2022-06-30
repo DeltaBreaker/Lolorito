@@ -7,14 +7,16 @@ import java.util.Map;
 
 public class Item {
 
-	private static HashMap<Long, Item> itemTable = new HashMap<>();
-	private static Map<String, Long> categories = new LinkedHashMap<>();
+	private static HashMap<Integer, Item> marketableItemTable = new HashMap<>();
+	private static HashMap<Integer, Item> completeItemTable = new HashMap<>();
+	private static HashMap<String, Integer> nameTable = new HashMap<>();
+	private static Map<String, Integer> categories = new LinkedHashMap<>();
 
-	private long id;
+	private int id;
 	private String name;
-	private long category;
+	private byte category;
 
-	public Item(long id, String name, long category) {
+	public Item(int id, String name, byte category) {
 		this.id = id;
 		this.name = name;
 		this.category = category;
@@ -28,35 +30,44 @@ public class Item {
 		return name;
 	}
 
-	public long getCategory() {
+	public byte getCategory() {
 		return category;
 	}
 
-	public static Item getItem(long id) {
-		return itemTable.get(id);
+	public static Item getItem(int id) {
+		return completeItemTable.get(id);
 	}
 
-	public static int getItemListSize() {
-		return itemTable.size();
+	public static int getMarketableItemListSize() {
+		return marketableItemTable.size();
 	}
 
-	public static void loadItem(Item item) {
-		itemTable.put(item.id, item);
+	public static int getCompleteItemListSize() {
+		return completeItemTable.size();
 	}
 
-	public static ArrayList<Long> getIDList() {
-		ArrayList<Long> ids = new ArrayList<>();
-		for (Long l : itemTable.keySet()) {
+	public static void loadItem(Item item, boolean marketable) {
+		if (marketable) {
+			marketableItemTable.put(item.id, item);
+		}
+		completeItemTable.put(item.id, item);
+		nameTable.put(item.name, item.id);
+	}
+
+	public static ArrayList<Integer> getMarketableIDList() {
+		ArrayList<Integer> ids = new ArrayList<>();
+		for (Integer l : marketableItemTable.keySet()) {
 			ids.add(l);
 		}
 		return ids;
 	}
 
 	public static void clearItemData() {
-		itemTable.clear();
+		marketableItemTable.clear();
+		completeItemTable.clear();
 	}
 
-	public static void createCategory(String name, long id) {
+	public static void createCategory(String name, int id) {
 		categories.put(name, id);
 	}
 
@@ -70,6 +81,14 @@ public class Item {
 
 	public static long getCategoryID(String string) {
 		return categories.get(string);
+	}
+
+	public static boolean hasItemForID(int id) {
+		return marketableItemTable.containsKey(id);
+	}
+
+	public static int getIDFromName(String name) {
+		return nameTable.get(name);
 	}
 
 }

@@ -4,18 +4,16 @@ import com.github.deltabreaker.gui.GUIMain;
 
 public class Startup {
 
+	private static final String ITEM_DATA = "Item.txt";
+	private static final String RECIPE_DATA = "Recipe.txt";
+	public static final String CATEGORY_DATA = "Categories.json";
+
 	public static void main(String[] args) {
-		if (args.length > 0 && args[0].equals("-nogui")) {
-			try {
-				new Thread(new CommandManager(System.in)).start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			FileManager.loadCSVData(Startup.class.getClassLoader().getResourceAsStream("Item.txt"));
-			FileManager.loadCategories(Startup.class.getClassLoader().getResourceAsStream("Categories.json"));
-			new GUIMain();
-		}
+		new Thread(new CommandManager(System.in)).start();
+		FileManager.loadCSVItemData(Startup.class.getClassLoader().getResourceAsStream(ITEM_DATA));
+		FileManager.loadCSVRecipeData(Startup.class.getClassLoader().getResourceAsStream(RECIPE_DATA));
+		FileManager.loadCategories(Startup.class.getClassLoader().getResourceAsStream(CATEGORY_DATA));
+		new GUIMain();
 	}
 
 }

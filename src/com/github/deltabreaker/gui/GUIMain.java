@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
+import com.github.deltabreaker.data.Recipe;
 import com.github.deltabreaker.main.GUIMarketUpdateThread;
 import com.github.deltabreaker.main.WebManager;
 
@@ -43,16 +44,18 @@ public class GUIMain extends JFrame {
 			"Mandragora", "Masamune", "Pandaemonium", "Shinryu", "Titan", "Bismarck", "Ravana", "Sephirot", "Sophia",
 			"Zurvan" };
 
-	public static final String[] RESULTS_TABLE_COLUMNS = { "Name", "Avg. Price", "Total Sold", "# of Listings",
-			"Lowest NQ Price", "Lowest HQ Price" };
+	public static final String[] RESULTS_TABLE_COLUMNS = { "Name", "Avg. Price", "Sold", "# of Listings",
+			"Lowest NQ Price", "Lowest HQ Price", "Crafting Profit" };
 
-	public static final String[] SORT_TYPES = { "Total Profit", "Avg. Price", "Total Sold", "Listed NQ Price", "Listed HQ Price" };
+	public static final String[] SORT_TYPES = { "Total Gil Made", "Avg. Price", "Total Sold", "Listed NQ Price",
+			"Listed HQ Price", "Crafting Profit" };
 
 	private static final Border BORDER = BorderFactory.createLineBorder(Color.BLACK);
 
 	private Dimension windowSize = new Dimension(1280, 720);
 	private int uiWidth = 225;
 
+	private JLabel updateLabel;
 	private JCheckBox[] categories;
 
 	public GUIMain() {
@@ -88,8 +91,19 @@ public class GUIMain extends JFrame {
 
 		JTable results = new JTable(new DefaultTableModel(new String[][] {}, RESULTS_TABLE_COLUMNS));
 		results.setBounds(0, 0, resultsPane.getWidth(), resultsPane.getHeight());
-		results.setEnabled(false);
-		results.getColumnModel().getColumn(2).setPreferredWidth(20);
+		results.getColumnModel().getColumn(2).setPreferredWidth(15);
+		results.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = results.rowAtPoint(evt.getPoint());
+				if (row >= 0) {
+					int id = Item.getIDFromName((String) results.getValueAt(row, 0));
+					if (Recipe.hasRecipe(id)) {
+						new GUICraftingTree(Recipe.getRecipe(id));
+					}
+				}
+			}
+		});
 		resultsPane.setViewportView(results);
 
 		JLabel categoriesLabel = new JLabel("Categories");
@@ -194,7 +208,7 @@ public class GUIMain extends JFrame {
 		});
 		add(sortTypes);
 
-		JLabel searchLabel = new JLabel("Search");
+		JLabel searchLabel = new JLabel("Search Term");
 		searchLabel.setBounds(10, 225, uiWidth, 20);
 		searchLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(searchLabel);
@@ -204,7 +218,7 @@ public class GUIMain extends JFrame {
 		search.setBorder(BORDER);
 		add(search);
 
-		JLabel updateLabel = new JLabel("");
+		updateLabel = new JLabel("");
 		updateLabel.setBounds(10, 140, uiWidth, 20);
 		updateLabel.setHorizontalAlignment(JLabel.CENTER);
 		add(updateLabel);
@@ -235,7 +249,7 @@ public class GUIMain extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MarketData[] searchResults = MarketData.getSearchResults(search.getText().split(","),
-						(String) sortTypes.getSelectedItem(), getCategoryList(), 0, Item.getItemListSize());
+						(String) sortTypes.getSelectedItem(), getCategoryList(), 0, Item.getMarketableItemListSize());
 
 				DefaultTableModel model = (DefaultTableModel) results.getModel();
 				for (int i = model.getRowCount() - 1; i >= 0; i--) {
@@ -245,7 +259,8 @@ public class GUIMain extends JFrame {
 					model.addRow(new String[] { searchResults[i].getName(),
 							(int) (searchResults[i].getAverageGilPerUnit() * 100.0) / 100.0 + "g",
 							"" + searchResults[i].getTotalSold(), "" + searchResults[i].getListingAmount(),
-							searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice() });
+							searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice(),
+							MarketData.getCraftingProfit(searchResults[i].getID()) });
 				}
 			}
 
@@ -254,7 +269,6 @@ public class GUIMain extends JFrame {
 
 		setLocationRelativeTo(null);
 		setVisible(true);
-		repaint();
 
 		while (isVisible()) {
 			if (WebManager.isUpdating()) {
@@ -266,7 +280,7 @@ public class GUIMain extends JFrame {
 			repaint();
 
 			try {
-				Thread.sleep(16L);
+				Thread.sleep(100L);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}

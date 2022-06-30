@@ -42,7 +42,7 @@ public class WebManager {
 		return response.toString();
 	}
 
-	public static void updateResults(ArrayList<Long> idArray, long resultLimit, long recentcy) throws Exception {
+	public static void updateResults(ArrayList<Integer> idArray, long resultLimit, long recentcy) throws Exception {
 		if (server != null) {
 			System.out.println(LocalDateTime.now() + " [WebHandler]: Updating market data. Result limit: " + resultLimit
 					+ " | Recentcy: " + recentcy + " | URL Limit: " + URL_ID_LIMIT);
@@ -71,7 +71,7 @@ public class WebManager {
 							try {
 								JSONObject item = (JSONObject) itemList.get(i);
 
-								long itemID = (long) item.get("itemID");
+								int itemID = Integer.parseInt((long) item.get("itemID") + "");
 
 								JSONArray listings = (JSONArray) item.get("listings");
 								long[] listingPrices = new long[listings.size()];
@@ -85,17 +85,18 @@ public class WebManager {
 
 								JSONArray entries = (JSONArray) item.get("recentHistory");
 								long[] pricesPerUnit = new long[entries.size()];
-								long[] quantities = new long[entries.size()];
+								int[] quantities = new int[entries.size()];
 								for (int e = 0; e < entries.size(); e++) {
 									JSONObject entry = (JSONObject) entries.get(e);
 
 									pricesPerUnit[e] = (long) entry.get("pricePerUnit");
-									quantities[e] = (long) entry.get("quantity");
+									quantities[e] = Integer.parseInt((long) entry.get("quantity") + "");
 								}
 
 								MarketData.update(itemID, Item.getItem(itemID).getCategory(), pricesPerUnit, quantities,
 										listingPrices, isHQ);
 							} catch (Exception e) {
+								e.printStackTrace();
 								System.out.println(LocalDateTime.now() + " [WebHandler]: Null data. Skipping item");
 							}
 						}
@@ -109,7 +110,7 @@ public class WebManager {
 				}
 
 				// Prevents the loop from requesting data too often
-				updateProgress = 1 - ((double) idArray.size() / Item.getItemListSize());
+				updateProgress = 1 - ((double) idArray.size() / Item.getMarketableItemListSize());
 				Thread.sleep(REQUEST_INTERVAL);
 			}
 			isUpdating = false;

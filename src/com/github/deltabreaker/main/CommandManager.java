@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import com.github.deltabreaker.data.Item;
 
@@ -42,19 +41,14 @@ enum Command {
 	help {
 
 		@Override
-		public String[] run(String[] args) {
+		public void run(String[] args) {
 			if (args.length > 1) {
-				ArrayList<String> output = new ArrayList<>();
 				for (Command c : Command.values()) {
 					String text = c.getDescription();
 					System.out.println(text + "\n");
-					output.add(text);
 				}
-				return output.toArray(new String[output.size()]);
 			} else {
-				String text = Command.valueOf(args[1]).getDescription();
-				System.out.println(text + "\n");
-				return new String[] { text };
+				System.out.println(Command.valueOf(args[1]).getDescription());
 			}
 		}
 
@@ -65,12 +59,11 @@ enum Command {
 
 	},
 
-	load {
+	loadItems {
 
 		@Override
-		public String[] run(String[] args) {
-			String status = FileManager.loadCSVData(args[1]);
-			return new String[] { status };
+		public void run(String[] args) {
+			FileManager.loadCSVItemData(args[1]);
 		}
 
 		@Override
@@ -83,11 +76,9 @@ enum Command {
 	server {
 
 		@Override
-		public String[] run(String[] args) {
+		public void run(String[] args) {
 			WebManager.setServer(args[1]);
-			String text = LocalDateTime.now() + " [MatketUpdateThread]: Target server has been updated.";
-			System.out.println(text);
-			return new String[] { text };
+			System.out.println(LocalDateTime.now() + " [MatketUpdateThread]: Target server has been updated.");
 		}
 
 		@Override
@@ -100,7 +91,7 @@ enum Command {
 	update {
 
 		@Override
-		public String[] run(String[] args) {
+		public void run(String[] args) {
 			try {
 				long resultLimit = WebManager.DEFAULT_RESULTS_SIZE;
 				long recentcy = WebManager.DEFAULT_RECENTCY;
@@ -115,11 +106,11 @@ enum Command {
 					}
 				}
 
-				WebManager.updateResults(Item.getIDList(), resultLimit, recentcy);
-				return new String[] { LocalDateTime.now() + " [MatketUpdateThread]: Market data updated." };
+				WebManager.updateResults(Item.getMarketableIDList(), resultLimit, recentcy);
+				System.out.println(LocalDateTime.now() + " [MatketUpdateThread]: Market data updated.");
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new String[] { LocalDateTime.now() + " [MatketUpdateThread]: Error updating market data." };
+				System.out.println(LocalDateTime.now() + " [MatketUpdateThread]: Error updating market data.");
 			}
 		}
 
@@ -130,7 +121,7 @@ enum Command {
 
 	};
 
-	public abstract String[] run(String[] args);
+	public abstract void run(String[] args);
 
 	public abstract String getDescription();
 
