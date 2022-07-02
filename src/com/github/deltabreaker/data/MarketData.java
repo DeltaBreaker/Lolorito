@@ -162,123 +162,126 @@ public class MarketData {
 		return (items.size() > 0) ? results[0] : 0;
 	}
 
-	public static MarketData[] getSearchResults(String[] name, String type, long[] categories, int start, int end) {
+	public static MarketData[] getSearchResults(String[] name, String type, long[] categories, int start, int end,
+			boolean filterUnsold) {
 		searchFilter.clear();
 
 		for (MarketData m : marketData.values()) {
-			switch (type) {
+			if ((filterUnsold && m.totalSold > 0) || !filterUnsold) {
+				switch (type) {
 
-			case "Total Sold":
-				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
-						boolean matchesCat = false;
-						for (long i : categories) {
-							if (i == m.category) {
-								matchesCat = true;
+				case "Total Sold":
+					for (String s : name) {
+						if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+							boolean matchesCat = false;
+							for (long i : categories) {
+								if (i == m.category) {
+									matchesCat = true;
+									break;
+								}
+							}
+							if ((matchesCat || categories.length == 0)) {
+								searchFilter.put((double) m.totalSold + new Random().nextFloat(), m);
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
-							searchFilter.put((double) m.totalSold + new Random().nextFloat(), m);
-							break;
-						}
 					}
-				}
-				break;
+					break;
 
-			case "Avg. Price":
-				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
-						boolean matchesCat = false;
-						for (long i : categories) {
-							if (i == m.category) {
-								matchesCat = true;
+				case "Avg. Price":
+					for (String s : name) {
+						if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+							boolean matchesCat = false;
+							for (long i : categories) {
+								if (i == m.category) {
+									matchesCat = true;
+									break;
+								}
+							}
+							if (matchesCat || categories.length == 0) {
+								searchFilter.put((double) m.getAverageGilPerUnit() + new Random().nextFloat(), m);
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
-							searchFilter.put((double) m.getAverageGilPerUnit() + new Random().nextFloat(), m);
-							break;
-						}
 					}
-				}
-				break;
+					break;
 
-			case "Listed NQ Price":
-				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
-						boolean matchesCat = false;
-						for (long i : categories) {
-							if (i == m.category) {
-								matchesCat = true;
+				case "Listed NQ Price":
+					for (String s : name) {
+						if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+							boolean matchesCat = false;
+							for (long i : categories) {
+								if (i == m.category) {
+									matchesCat = true;
+									break;
+								}
+							}
+							if (matchesCat || categories.length == 0) {
+								searchFilter.put(m.getLowestListedNQPriceValue() + new Random().nextFloat(), m);
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
-							searchFilter.put(m.getLowestListedNQPriceValue() + new Random().nextFloat(), m);
-							break;
-						}
 					}
-				}
-				break;
+					break;
 
-			case "Listed HQ Price":
-				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
-						boolean matchesCat = false;
-						for (long i : categories) {
-							if (i == m.category) {
-								matchesCat = true;
+				case "Listed HQ Price":
+					for (String s : name) {
+						if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+							boolean matchesCat = false;
+							for (long i : categories) {
+								if (i == m.category) {
+									matchesCat = true;
+									break;
+								}
+							}
+							if (matchesCat || categories.length == 0) {
+								searchFilter.put(m.getLowestListedHQPriceValue() + new Random().nextFloat(), m);
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
-							searchFilter.put(m.getLowestListedHQPriceValue() + new Random().nextFloat(), m);
-							break;
-						}
 					}
-				}
-				break;
+					break;
 
-			case "Crafting Profit":
-				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
-						boolean matchesCat = false;
-						for (long i : categories) {
-							if (i == m.category) {
-								matchesCat = true;
+				case "Crafting Profit":
+					for (String s : name) {
+						if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+							boolean matchesCat = false;
+							for (long i : categories) {
+								if (i == m.category) {
+									matchesCat = true;
+									break;
+								}
+							}
+							if (matchesCat || categories.length == 0) {
+								String profit = getCraftingProfit(m.getID());
+								if (!profit.equals("N/A")) {
+									searchFilter.put((double) (Long.parseLong(profit) + new Random().nextFloat()), m);
+								}
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
-							String profit = getCraftingProfit(m.getID());
-							if (!profit.equals("N/A")) {
-								searchFilter.put((double) (Long.parseLong(profit) + new Random().nextFloat()), m);
-							}
-							break;
-						}
 					}
-				}
-				break;
+					break;
 
-			default:
-				for (String s : name) {
-					if (m.getName().toLowerCase().contains(s.toLowerCase())) {
-						boolean matchesCat = false;
-						for (long i : categories) {
-							if (i == m.category) {
-								matchesCat = true;
+				default:
+					for (String s : name) {
+						if (m.getName().toLowerCase().contains(s.toLowerCase())) {
+							boolean matchesCat = false;
+							for (long i : categories) {
+								if (i == m.category) {
+									matchesCat = true;
+									break;
+								}
+							}
+							if (matchesCat || categories.length == 0) {
+								searchFilter.put((double) m.totalProfit + new Random().nextFloat(), m);
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
-							searchFilter.put((double) m.totalProfit + new Random().nextFloat(), m);
-							break;
-						}
 					}
+					break;
+					
 				}
-				break;
-
 			}
 		}
 

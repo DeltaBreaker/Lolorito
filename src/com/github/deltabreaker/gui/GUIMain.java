@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -38,15 +39,23 @@ public class GUIMain extends JFrame {
 	private static final String WINDOW_TITLE = "Lolorito";
 	private static final long serialVersionUID = -468143660454460863L;
 
-	public static final String[] SERVER_LIST = { "Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova",
-			"Midgardsormr", "Sargatanas", "Siren", "Behemoth", "Excalibur", "Exodus", "Famfrit", "Hyperion", "Lamia",
-			"Leviathan", "Ultros", "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus",
-			"Zalera", "Cerberus", "Louisoix", "Moogle", "Omega", "Ragnarok", "Spriggan", "Lich", "Odin", "Phoenix",
-			"Shiva", "Zodiark", "Twintania", "Aegis", "Atomos", "Carbuncle", "Garuda", "Gungnir", "Kujata", "Ramuh",
-			"Tonberry", "Typhon", "Unicorn", "Alexander", "Bahamut", "Durandal", "Fenrir", "Ifrit", "Ridill", "Tiamat",
-			"Ultima", "Valefor", "Yojimbo", "Zeromus", "Anima", "Asura", "Belias", "Chocobo", "Hades", "Ixion",
-			"Mandragora", "Masamune", "Pandaemonium", "Shinryu", "Titan", "Bismarck", "Ravana", "Sephirot", "Sophia",
-			"Zurvan" };
+	public static final String[] DATA_CENTER_LIST = { "Aether", "Primal", "Crystal", "Chaos", "Light", "Elemental",
+			"Gaia", "Mana", "Materia" };
+
+	public static final String[][] SERVER_LIST = {
+			new String[] { "Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova", "Midgardsormr", "Sargatanas",
+					"Siren" },
+			new String[] { "Behemoth", "Excalibur", "Exodus", "Famfrit", "Hyperion", "Lamia", "Leviathan", "Ultros" },
+			new String[] { "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera" },
+			new String[] { "Cerberus", "Louisoix", "Moogle", "Omega", "Ragnarok", "Spriggan" },
+			new String[] { "Lich", "Odin", "Phoenix", "Shiva", "Zodiark", "Twintania" },
+			new String[] { "Aegis", "Atomos", "Carbuncle", "Garuda", "Gungnir", "Kujata", "Ramuh", "Tonberry", "Typhon",
+					"Unicorn" },
+			new String[] { "Alexander", "Bahamut", "Durandal", "Fenrir", "Ifrit", "Ridill", "Tiamat", "Ultima",
+					"Valefor", "Yojimbo", "Zeromus" },
+			new String[] { "Anima", "Asura", "Belias", "Chocobo", "Hades", "Ixion", "Mandragora", "Masamune",
+					"Pandaemonium", "Shinryu", "Titan" },
+			new String[] { "Bismarck", "Ravana", "Sephirot", "Sophia", "Zurvan" } };
 
 	public static final String[] RESULTS_TABLE_COLUMNS = { "Name", "Avg. Price", "Sold", "# of Listings",
 			"Lowest NQ Price", "Lowest HQ Price", "Crafting Profit" };
@@ -69,13 +78,17 @@ public class GUIMain extends JFrame {
 		setResizable(false);
 		setLayout(null);
 
-		JLabel serverLabel = new JLabel("Server");
+		JLabel serverLabel = new JLabel("Data Center / Server");
 		serverLabel.setBounds(10, 5, uiWidth, 20);
 		serverLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(serverLabel);
 
-		JComboBox<String> servers = new JComboBox<>(SERVER_LIST);
-		servers.setBounds(10, 30, uiWidth, 20);
+		JComboBox<String> dataCenters = new JComboBox<>(DATA_CENTER_LIST);
+		dataCenters.setBounds(10, 30, uiWidth, 20);
+		dataCenters.setFocusable(false);
+
+		JComboBox<String> servers = new JComboBox<>(SERVER_LIST[dataCenters.getSelectedIndex()]);
+		servers.setBounds(10, 60, uiWidth, 20);
 		servers.setFocusable(false);
 		servers.addActionListener(new ActionListener() {
 
@@ -86,6 +99,18 @@ public class GUIMain extends JFrame {
 
 		});
 		add(servers);
+		dataCenters.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(
+						SERVER_LIST[dataCenters.getSelectedIndex()]);
+				servers.setModel(model);
+				servers.setSelectedIndex(0);
+			}
+
+		});
+		add(dataCenters);
 
 		JScrollPane resultsPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -176,12 +201,12 @@ public class GUIMain extends JFrame {
 		add(none);
 
 		JLabel recencyLabel = new JLabel("Recency: 24 hours");
-		recencyLabel.setBounds(10, 70, uiWidth, 20);
+		recencyLabel.setBounds(10, 90, uiWidth, 20);
 		recencyLabel.setHorizontalAlignment(JLabel.CENTER);
 		add(recencyLabel);
 
 		JSlider recency = new JSlider();
-		recency.setBounds(10, 90, uiWidth, 20);
+		recency.setBounds(10, 110, uiWidth, 20);
 		recency.setMinimum(1);
 		recency.setMaximum(168);
 		recency.setValue(24);
@@ -195,41 +220,33 @@ public class GUIMain extends JFrame {
 		add(recency);
 
 		JLabel sortLabel = new JLabel("Sort Type");
-		sortLabel.setBounds(10, 165, uiWidth, 20);
+		sortLabel.setBounds(10, 185, uiWidth, 20);
 		sortLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(sortLabel);
 
 		JComboBox<String> sortTypes = new JComboBox<>(SORT_TYPES);
-		sortTypes.setBounds(10, 195, uiWidth, 20);
+		sortTypes.setBounds(10, 215, uiWidth, 20);
 		sortTypes.setFocusable(false);
-		sortTypes.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-
-		});
 		add(sortTypes);
 
 		JLabel searchLabel = new JLabel("Search Term");
-		searchLabel.setBounds(10, 225, uiWidth, 20);
+		searchLabel.setBounds(10, 245, uiWidth, 20);
 		searchLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(searchLabel);
 
 		JTextArea search = new JTextArea("");
-		search.setBounds(10, 250, uiWidth, 18);
+		search.setBounds(10, 270, uiWidth, 18);
 		search.setBorder(BORDER);
 		((AbstractDocument) search.getDocument()).setDocumentFilter(new CustomDocumentFilter());
 		add(search);
 
 		updateLabel = new JLabel("");
-		updateLabel.setBounds(10, 140, uiWidth, 20);
+		updateLabel.setBounds(10, 160, uiWidth, 20);
 		updateLabel.setHorizontalAlignment(JLabel.CENTER);
 		add(updateLabel);
 
 		JButton update = new JButton("Update Market Data");
-		update.setBounds(10, 120, uiWidth, 20);
+		update.setBounds(10, 140, uiWidth, 20);
 		update.setFocusable(false);
 		update.addActionListener(new ActionListener() {
 
@@ -246,27 +263,23 @@ public class GUIMain extends JFrame {
 		});
 		add(update);
 
+		JLabel filterUnsoldLabel = new JLabel("Filter Unsold Items");
+		filterUnsoldLabel.setBounds(40, 340, uiWidth, 20);
+		filterUnsoldLabel.setAlignmentX(LEFT_ALIGNMENT);
+		add(filterUnsoldLabel);
+
+		JCheckBox filterUnsold = new JCheckBox();
+		filterUnsold.setBounds(10, 340, 20, 20);
+		add(filterUnsold);
+		
 		JButton searchButton = new JButton("Search");
-		searchButton.setBounds(10, 280, uiWidth, 20);
+		searchButton.setBounds(10, 300, uiWidth, 20);
 		searchButton.setFocusable(false);
 		searchButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MarketData[] searchResults = MarketData.getSearchResults(search.getText().split(","),
-						(String) sortTypes.getSelectedItem(), getCategoryList(), 0, Item.getMarketableItemListSize());
-
-				DefaultTableModel model = (DefaultTableModel) results.getModel();
-				for (int i = model.getRowCount() - 1; i >= 0; i--) {
-					model.removeRow(i);
-				}
-				for (int i = 0; i < searchResults.length; i++) {
-					model.addRow(new String[] { searchResults[i].getName(),
-							(int) (searchResults[i].getAverageGilPerUnit() * 100.0) / 100.0 + "g",
-							"" + searchResults[i].getTotalSold(), "" + searchResults[i].getListingAmount(),
-							searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice(),
-							MarketData.getCraftingProfit(searchResults[i].getID()) });
-				}
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(), results);
 			}
 
 		});
@@ -280,6 +293,8 @@ public class GUIMain extends JFrame {
 				updateLabel.setText("Progress: " + (int) (WebManager.getUpdateProgress() * 100) + "%");
 			} else if (!updateLabel.getText().equals("")) {
 				updateLabel.setText("");
+
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(), results);
 			}
 
 			repaint();
@@ -289,6 +304,23 @@ public class GUIMain extends JFrame {
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+		}
+	}
+
+	private void updateResults(String search, String sortType, boolean filterUnsold, JTable results) {
+		MarketData[] searchResults = MarketData.getSearchResults(search.split(","), sortType, getCategoryList(), 0,
+				Item.getMarketableItemListSize(), filterUnsold);
+
+		DefaultTableModel model = (DefaultTableModel) results.getModel();
+		for (int i = model.getRowCount() - 1; i >= 0; i--) {
+			model.removeRow(i);
+		}
+		for (int i = 0; i < searchResults.length; i++) {
+			model.addRow(new String[] { searchResults[i].getName(),
+					(int) (searchResults[i].getAverageGilPerUnit() * 100.0) / 100.0 + "g",
+					"" + searchResults[i].getTotalSold(), "" + searchResults[i].getListingAmount(),
+					searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice(),
+					MarketData.getCraftingProfit(searchResults[i].getID()) });
 		}
 	}
 

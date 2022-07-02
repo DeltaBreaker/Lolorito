@@ -23,7 +23,7 @@ public class WebManager {
 	public static final long URL_ID_LIMIT = 100;
 	public static final long REQUEST_INTERVAL = 50L;
 
-	private static String server = GUIMain.SERVER_LIST[0];
+	private static String server = GUIMain.SERVER_LIST[0][0];
 	private static double updateProgress = 0;
 	private static boolean isUpdating = false;
 
