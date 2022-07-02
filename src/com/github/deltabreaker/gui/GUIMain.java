@@ -22,6 +22,10 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
@@ -216,6 +220,7 @@ public class GUIMain extends JFrame {
 		JTextArea search = new JTextArea("");
 		search.setBounds(10, 250, uiWidth, 18);
 		search.setBorder(BORDER);
+		((AbstractDocument) search.getDocument()).setDocumentFilter(new CustomDocumentFilter());
 		add(search);
 
 		updateLabel = new JLabel("");
@@ -302,4 +307,28 @@ public class GUIMain extends JFrame {
 		return results;
 	}
 
+}
+
+class CustomDocumentFilter extends DocumentFilter {
+
+	@Override
+	public void replace(FilterBypass fb, int i, int i1, String string, AttributeSet as) throws BadLocationException {
+		for (int n = string.length(); n > 0; n--) {
+			char c = string.charAt(n - 1);
+			if (Character.isAlphabetic(c) || Character.isDigit(c) || c == ' ' || c == '.') {
+				super.replace(fb, i, i1, String.valueOf(c), as);
+			}
+		}
+	}
+
+	@Override
+	public void remove(FilterBypass fb, int i, int i1) throws BadLocationException {
+		super.remove(fb, i, i1);
+	}
+
+	@Override
+	public void insertString(FilterBypass fb, int i, String string, AttributeSet as) throws BadLocationException {
+		super.insertString(fb, i, string, as);
+
+	}
 }

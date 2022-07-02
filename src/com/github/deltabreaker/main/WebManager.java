@@ -21,7 +21,7 @@ public class WebManager {
 	public static final long DEFAULT_RESULTS_SIZE = 200;
 	public static final long DEFAULT_RECENTCY = 86400;
 	public static final long URL_ID_LIMIT = 100;
-	public static final long REQUEST_INTERVAL = 100L;
+	public static final long REQUEST_INTERVAL = 50L;
 
 	private static String server = GUIMain.SERVER_LIST[0];
 	private static double updateProgress = 0;
@@ -48,8 +48,8 @@ public class WebManager {
 					+ " | Recentcy: " + recentcy + " | URL Limit: " + URL_ID_LIMIT);
 			isUpdating = true;
 			while (idArray.size() > 0) {
+				long time = System.currentTimeMillis();
 				try {
-
 					// Build the URL from the base URL and id list
 					StringBuilder idList = new StringBuilder();
 					int arraySize = idArray.size();
@@ -109,9 +109,11 @@ public class WebManager {
 							+ " [MatketUpdateThread]: Error updating this block of items. Continuing");
 				}
 
-				// Prevents the loop from requesting data too often
 				updateProgress = 1 - ((double) idArray.size() / Item.getMarketableItemListSize());
-				Thread.sleep(REQUEST_INTERVAL);
+
+				// Keeps the requests limited to a certain rate without increasing wait time
+				long responseTime = System.currentTimeMillis() - time;
+				Thread.sleep(Math.max(0, REQUEST_INTERVAL - responseTime));
 			}
 			isUpdating = false;
 		} else {
