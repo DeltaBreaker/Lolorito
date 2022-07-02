@@ -10,9 +10,12 @@ When its done you can pick what categories to search in and any search term and 
 
 Finally just press search and the results will appar on the right. You can search as many times as you'd like. Updating the market data only needs to be done once.
 
-Example:
+![image](https://user-images.githubusercontent.com/6527156/176675601-d491fe75-e5ff-4bda-9d2e-511213563e51.png)
 
-![image](https://user-images.githubusercontent.com/6527156/175817825-9950491d-caf4-458f-a670-b42742eb31f4.png)
+### Crafting Trees
+If an item can be crafted, the "Crafting Profit" column will show the highest profit you can make from buying the required materials and crafting the item. Clicking on that row will open a crafting tree showing what items are needed and if it costs less to make the materials yourself or just buy them from the market. It shows the profits for both high and low qualities. The required materials show the lower of the two when calculating costs and takes into account how many are needed as well.
+
+![image](https://user-images.githubusercontent.com/6527156/176676701-d18c4621-2ffd-4c6b-8ed3-8c7127588edf.png)
 
 ## Downloads
 See the "Releases" page [here](https://github.com/DeltaBreaker/Lolorito/releases)
