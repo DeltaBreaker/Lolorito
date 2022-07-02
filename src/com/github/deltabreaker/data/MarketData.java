@@ -163,7 +163,7 @@ public class MarketData {
 	}
 
 	public static MarketData[] getSearchResults(String[] name, String type, long[] categories, int start, int end,
-			boolean filterUnsold) {
+			boolean filterUnsold, boolean removeNQ, boolean removeHQ) {
 		searchFilter.clear();
 
 		for (MarketData m : marketData.values()) {
@@ -253,7 +253,7 @@ public class MarketData {
 								}
 							}
 							if (matchesCat || categories.length == 0) {
-								String profit = getCraftingProfit(m.getID());
+								String profit = getCraftingProfit(m.getID(), removeNQ, removeHQ);
 								if (!profit.equals("N/A")) {
 									searchFilter.put((double) (Long.parseLong(profit) + new Random().nextFloat()), m);
 								}
@@ -280,7 +280,7 @@ public class MarketData {
 						}
 					}
 					break;
-					
+
 				}
 			}
 		}
@@ -320,12 +320,12 @@ public class MarketData {
 		return "N/A";
 	}
 
-	public static String getHighestLowestMarketPrice(int i, int count) {
+	public static String getHighestLowestMarketPrice(int i, int count, boolean removeNQ, boolean removeHQ) {
 		if (marketData.containsKey(i)) {
 			MarketData item = marketData.get(i);
 
-			int lowestNQ = (int) item.getLowestListedNQPriceValue();
-			int lowestHQ = (int) item.getLowestListedHQPriceValue();
+			int lowestNQ = (removeNQ) ? 0 : (int) item.getLowestListedNQPriceValue();
+			int lowestHQ = (removeHQ) ? 0 : (int) item.getLowestListedHQPriceValue();
 			int highestMarketPrice = lowestNQ;
 			if (lowestHQ > 0 && (lowestHQ > lowestNQ || highestMarketPrice == 0)) {
 				highestMarketPrice = lowestHQ;
@@ -367,10 +367,11 @@ public class MarketData {
 		return "N/A";
 	}
 
-	public static String getCraftingProfit(int id) {
+	public static String getCraftingProfit(int id, boolean removeNQ, boolean removeHQ) {
 		if (Recipe.hasRecipe(id)) {
 			String costOfMaterials = getCostOfComponents(id, 1);
-			String lowestPrice = MarketData.getHighestLowestMarketPrice(id, Recipe.getRecipe(id).getAmount());
+			String lowestPrice = MarketData.getHighestLowestMarketPrice(id, Recipe.getRecipe(id).getAmount(), removeNQ,
+					removeHQ);
 
 			if (!lowestPrice.contentEquals("N/A")) {
 				long cost = Long.parseLong(lowestPrice);

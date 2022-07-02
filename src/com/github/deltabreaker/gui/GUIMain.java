@@ -70,6 +70,7 @@ public class GUIMain extends JFrame {
 
 	private JLabel updateLabel;
 	private JCheckBox[] categories;
+	private JCheckBox onlyNQ, onlyHQ;
 
 	public GUIMain() {
 		setTitle(WINDOW_TITLE);
@@ -271,7 +272,25 @@ public class GUIMain extends JFrame {
 		JCheckBox filterUnsold = new JCheckBox();
 		filterUnsold.setBounds(10, 340, 20, 20);
 		add(filterUnsold);
-		
+
+		JLabel onlyNQLabel = new JLabel("Ignore NQ Profitability");
+		onlyNQLabel.setBounds(40, 360, uiWidth, 20);
+		onlyNQLabel.setAlignmentX(LEFT_ALIGNMENT);
+		add(onlyNQLabel);
+
+		onlyNQ = new JCheckBox();
+		onlyNQ.setBounds(10, 360, 20, 20);
+		add(onlyNQ);
+
+		JLabel onlyHQLabel = new JLabel("Ignore HQ Profitability");
+		onlyHQLabel.setBounds(40, 380, uiWidth, 20);
+		onlyHQLabel.setAlignmentX(LEFT_ALIGNMENT);
+		add(onlyHQLabel);
+
+		onlyHQ = new JCheckBox();
+		onlyHQ.setBounds(10, 380, 20, 20);
+		add(onlyHQ);
+
 		JButton searchButton = new JButton("Search");
 		searchButton.setBounds(10, 300, uiWidth, 20);
 		searchButton.setFocusable(false);
@@ -279,7 +298,8 @@ public class GUIMain extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(), results);
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
+						results);
 			}
 
 		});
@@ -294,7 +314,8 @@ public class GUIMain extends JFrame {
 			} else if (!updateLabel.getText().equals("")) {
 				updateLabel.setText("");
 
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(), results);
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
+						results);
 			}
 
 			repaint();
@@ -309,7 +330,7 @@ public class GUIMain extends JFrame {
 
 	private void updateResults(String search, String sortType, boolean filterUnsold, JTable results) {
 		MarketData[] searchResults = MarketData.getSearchResults(search.split(","), sortType, getCategoryList(), 0,
-				Item.getMarketableItemListSize(), filterUnsold);
+				Item.getMarketableItemListSize(), filterUnsold, onlyNQ.isSelected(), onlyHQ.isSelected());
 
 		DefaultTableModel model = (DefaultTableModel) results.getModel();
 		for (int i = model.getRowCount() - 1; i >= 0; i--) {
@@ -320,7 +341,7 @@ public class GUIMain extends JFrame {
 					(int) (searchResults[i].getAverageGilPerUnit() * 100.0) / 100.0 + "g",
 					"" + searchResults[i].getTotalSold(), "" + searchResults[i].getListingAmount(),
 					searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice(),
-					MarketData.getCraftingProfit(searchResults[i].getID()) });
+					MarketData.getCraftingProfit(searchResults[i].getID(), onlyNQ.isSelected(), onlyHQ.isSelected()) });
 		}
 	}
 
