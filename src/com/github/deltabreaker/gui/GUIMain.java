@@ -36,25 +36,24 @@ import com.github.deltabreaker.main.WebManager;
 
 public class GUIMain extends JFrame {
 
-	private static final String WINDOW_TITLE = "Lolorito";
+	private static final String WINDOW_TITLE = "Lolorito - FFXVI v6.18";
 	private static final long serialVersionUID = -468143660454460863L;
 
 	public static final String[] DATA_CENTER_LIST = { "Aether", "Primal", "Crystal", "Chaos", "Light", "Elemental",
-			"Gaia", "Mana", "Materia" };
+			"Gaia", "Mana", "Meteor", "Materia" };
 
 	public static final String[][] SERVER_LIST = {
 			new String[] { "Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova", "Midgardsormr", "Sargatanas",
 					"Siren" },
 			new String[] { "Behemoth", "Excalibur", "Exodus", "Famfrit", "Hyperion", "Lamia", "Leviathan", "Ultros" },
 			new String[] { "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera" },
-			new String[] { "Cerberus", "Louisoix", "Moogle", "Omega", "Ragnarok", "Spriggan" },
-			new String[] { "Lich", "Odin", "Phoenix", "Shiva", "Zodiark", "Twintania" },
-			new String[] { "Aegis", "Atomos", "Carbuncle", "Garuda", "Gungnir", "Kujata", "Ramuh", "Tonberry", "Typhon",
-					"Unicorn" },
-			new String[] { "Alexander", "Bahamut", "Durandal", "Fenrir", "Ifrit", "Ridill", "Tiamat", "Ultima",
-					"Valefor", "Yojimbo", "Zeromus" },
-			new String[] { "Anima", "Asura", "Belias", "Chocobo", "Hades", "Ixion", "Mandragora", "Masamune",
-					"Pandaemonium", "Shinryu", "Titan" },
+			new String[] { "Cerberus", "Louisoix", "Moogle", "Omega", "Ragnarok", "Spriggan", "Sagittarius",
+					"Phantom" },
+			new String[] { "Lich", "Odin", "Phoenix", "Shiva", "Zodiark", "Twintania", "Alpha", "Raiden" },
+			new String[] { "Aegis", "Atomos", "Carbuncle", "Garuda", "Gungnir", "Kujata", "Tonberry", "Typhon" },
+			new String[] { "Alexander", "Bahamut", "Durandal", "Fenrir", "Ifrit", "Ridill", "Tiamat", "Ultima" },
+			new String[] { "Anima", "Asura", "Chocobo", "Hades", "Ixion", "Masamune", "Pandaemonium", "Titan" },
+			new String[] { "Valefor", "Yojimbo", "Zeromus", "Ramuh", "Unicorn", "Belias", "Mandragora", "Shinryu" },
 			new String[] { "Bismarck", "Ravana", "Sephirot", "Sophia", "Zurvan" } };
 
 	public static final String[] RESULTS_TABLE_COLUMNS = { "Name", "Avg. Price", "Sold", "# of Listings",
