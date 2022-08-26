@@ -10,7 +10,7 @@ When its done you can pick what categories to search in and any search term and 
 
 Finally just press search and the results will appar on the right. You can search as many times as you'd like. Updating the market data only needs to be done once.
 
-![image](https://user-images.githubusercontent.com/6527156/176675601-d491fe75-e5ff-4bda-9d2e-511213563e51.png)
+![image](https://user-images.githubusercontent.com/6527156/184103520-1b3865f8-0dda-49c8-955d-a0f1243d70d9.png)
 
 ### Crafting Trees
 If an item can be crafted, the "Crafting Profit" column will show the highest profit you can make from buying the required materials and crafting the item. Clicking on that row will open a crafting tree showing what items are needed and if it costs less to make the materials yourself or just buy them from the market. It shows the profits for both high and low qualities. The required materials show the lower of the two when calculating costs and takes into account how many are needed as well.
