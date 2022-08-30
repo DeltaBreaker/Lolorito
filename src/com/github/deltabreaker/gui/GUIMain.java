@@ -252,8 +252,10 @@ public class GUIMain extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				MarketData.filterOutliers = JOptionPane.showConfirmDialog(update.getParent(),
+						"Attempt to filter outliers from market data?", "Lolorito", JOptionPane.YES_NO_OPTION) == 0;
 				try {
-					JOptionPane.showMessageDialog(update, "Updating market data. This may take a while.");
+					JOptionPane.showMessageDialog(update.getParent(), "Updating market data. This may take a while.");
 					new Thread(new GUIMarketUpdateThread(recency.getValue() * 3600, update.getParent())).start();
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -270,6 +272,15 @@ public class GUIMain extends JFrame {
 
 		JCheckBox filterUnsold = new JCheckBox();
 		filterUnsold.setBounds(10, 340, 20, 20);
+		filterUnsold.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
+						results);
+			}
+
+		});
 		add(filterUnsold);
 
 		JLabel onlyNQLabel = new JLabel("Ignore NQ Profitability");
@@ -279,6 +290,15 @@ public class GUIMain extends JFrame {
 
 		onlyNQ = new JCheckBox();
 		onlyNQ.setBounds(10, 360, 20, 20);
+		onlyNQ.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
+						results);
+			}
+
+		});
 		add(onlyNQ);
 
 		JLabel onlyHQLabel = new JLabel("Ignore HQ Profitability");
@@ -288,6 +308,15 @@ public class GUIMain extends JFrame {
 
 		onlyHQ = new JCheckBox();
 		onlyHQ.setBounds(10, 380, 20, 20);
+		onlyHQ.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
+						results);
+			}
+
+		});
 		add(onlyHQ);
 
 		JButton searchButton = new JButton("Search");

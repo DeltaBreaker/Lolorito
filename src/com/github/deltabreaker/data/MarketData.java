@@ -27,6 +27,10 @@ public class MarketData {
 	private double totalProfit = 0;
 	private long totalSold;
 
+	public static boolean filterOutliers = false;
+	public static int outlierTolerance = 10;
+	public static int outlierCutoff = 5;
+
 	public MarketData(int id, byte category, long[] pricesPerUnit, int[] quantities, long[] listingPrices,
 			boolean[] isHQ) {
 		updateData(id, category, pricesPerUnit, quantities, listingPrices, isHQ);
@@ -34,6 +38,54 @@ public class MarketData {
 
 	public void updateData(int id, byte category, long[] pricesPerUnit, int[] quantities, long[] listingPrices,
 			boolean[] isHQ) {
+		if (filterOutliers) {
+			if (pricesPerUnit.length > outlierCutoff) {
+				long[] pricesCopy = pricesPerUnit.clone();
+				Arrays.sort(pricesCopy);
+
+				long medianPrice = (pricesCopy.length % 2 == 0)
+						? (pricesCopy[pricesCopy.length / 2] + pricesCopy[pricesCopy.length / 2 - 1]) / 2
+						: pricesCopy[pricesCopy.length / 2];
+
+				// Removes the outlier prices while keeping the quantities matched
+				ArrayList<Long> filteredPrices = new ArrayList<>();
+				ArrayList<Integer> filteredQuantities = new ArrayList<>();
+				for (int i = 0; i < pricesPerUnit.length; i++) {
+					if (pricesPerUnit[i] < medianPrice * outlierTolerance) {
+						filteredPrices.add(pricesPerUnit[i]);
+						filteredQuantities.add(quantities[i]);
+					}
+				}
+
+				pricesPerUnit = filteredPrices.stream().mapToLong(i -> i).toArray();
+				quantities = filteredQuantities.stream().mapToInt(i -> i).toArray();
+			}
+
+			if (pricesPerUnit.length > 0) {
+				long[] pricesCopy = pricesPerUnit.clone();
+				Arrays.sort(pricesCopy);
+
+				// Removes the outlier listings while keeping the qualities matched
+				long medianPrice = (pricesCopy.length % 2 == 0)
+						? (pricesCopy[pricesCopy.length / 2] + pricesCopy[pricesCopy.length / 2 - 1]) / 2
+						: pricesCopy[pricesCopy.length / 2];
+				ArrayList<Long> filteredListings = new ArrayList<>();
+				ArrayList<Boolean> filteredQualities = new ArrayList<>();
+				for (int i = 0; i < listingPrices.length; i++) {
+					if (listingPrices[i] < medianPrice * outlierTolerance) {
+						filteredListings.add(listingPrices[i]);
+						filteredQualities.add(isHQ[i]);
+					}
+				}
+
+				listingPrices = filteredListings.stream().mapToLong(i -> i).toArray();
+				isHQ = new boolean[filteredQualities.size()];
+				for (int i = 0; i < isHQ.length; i++) {
+					isHQ[i] = filteredQualities.get(i);
+				}
+			}
+		}
+
 		this.id = id;
 		this.category = category;
 		this.pricesPerUnit = pricesPerUnit;
