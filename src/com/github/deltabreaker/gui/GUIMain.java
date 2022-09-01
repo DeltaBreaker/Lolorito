@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -70,6 +72,10 @@ public class GUIMain extends JFrame {
 	private JLabel updateLabel;
 	private JCheckBox[] categories;
 	private JCheckBox onlyNQ, onlyHQ;
+	private JTable results;
+	private JTextArea search;
+	private JComboBox<String> sortTypes;
+	private JCheckBox filterUnsold;
 
 	public GUIMain() {
 		setTitle(WINDOW_TITLE);
@@ -118,17 +124,18 @@ public class GUIMain extends JFrame {
 		resultsPane.setAlignmentY(JScrollPane.RIGHT_ALIGNMENT);
 		add(resultsPane);
 
-		JTable results = new JTable(new DefaultTableModel(new String[][] {}, RESULTS_TABLE_COLUMNS));
+		GUIMain parent = this;
+		results = new JTable(new DefaultTableModel(new String[][] {}, RESULTS_TABLE_COLUMNS));
 		results.setBounds(0, 0, resultsPane.getWidth(), resultsPane.getHeight());
 		results.getColumnModel().getColumn(2).setPreferredWidth(15);
-		results.addMouseListener(new java.awt.event.MouseAdapter() {
+		results.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt) {
 				int row = results.rowAtPoint(evt.getPoint());
 				if (row >= 0) {
 					int id = Item.getIDFromName((String) results.getValueAt(row, 0));
 					if (Recipe.hasRecipe(id)) {
-						new GUICraftingTree(Recipe.getRecipe(id));
+						new GUICraftingTree(Recipe.getRecipe(id), parent);
 					}
 				}
 			}
@@ -224,9 +231,15 @@ public class GUIMain extends JFrame {
 		sortLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(sortLabel);
 
-		JComboBox<String> sortTypes = new JComboBox<>(SORT_TYPES);
+		sortTypes = new JComboBox<>(SORT_TYPES);
 		sortTypes.setBounds(10, 215, uiWidth, 20);
 		sortTypes.setFocusable(false);
+		sortTypes.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				refreshResults();
+			}
+		});
 		add(sortTypes);
 
 		JLabel searchLabel = new JLabel("Search Term");
@@ -234,7 +247,7 @@ public class GUIMain extends JFrame {
 		searchLabel.setHorizontalAlignment(JLabel.LEFT);
 		add(searchLabel);
 
-		JTextArea search = new JTextArea("");
+		search = new JTextArea("");
 		search.setBounds(10, 270, uiWidth, 18);
 		search.setBorder(BORDER);
 		((AbstractDocument) search.getDocument()).setDocumentFilter(new CustomDocumentFilter());
@@ -270,14 +283,13 @@ public class GUIMain extends JFrame {
 		filterUnsoldLabel.setAlignmentX(LEFT_ALIGNMENT);
 		add(filterUnsoldLabel);
 
-		JCheckBox filterUnsold = new JCheckBox();
+		filterUnsold = new JCheckBox();
 		filterUnsold.setBounds(10, 340, 20, 20);
 		filterUnsold.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
-						results);
+				refreshResults();
 			}
 
 		});
@@ -294,8 +306,7 @@ public class GUIMain extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
-						results);
+				refreshResults();
 			}
 
 		});
@@ -312,8 +323,7 @@ public class GUIMain extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
-						results);
+				refreshResults();
 			}
 
 		});
@@ -326,12 +336,23 @@ public class GUIMain extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
-						results);
+				refreshResults();
 			}
 
 		});
 		add(searchButton);
+
+		JButton materialsButton = new JButton("Material List");
+		materialsButton.setBounds(10, 420, uiWidth, 20);
+		materialsButton.setFocusable(false);
+		materialsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new GUIMaterials(parent);
+			}
+
+		});
+		add(materialsButton);
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -342,8 +363,7 @@ public class GUIMain extends JFrame {
 			} else if (!updateLabel.getText().equals("")) {
 				updateLabel.setText("");
 
-				updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(),
-						results);
+				refreshResults();
 			}
 
 			repaint();
@@ -371,6 +391,12 @@ public class GUIMain extends JFrame {
 					searchResults[i].getLowestListedNQPrice(), searchResults[i].getLowestListedHQPrice(),
 					MarketData.getCraftingProfit(searchResults[i].getID(), onlyNQ.isSelected(), onlyHQ.isSelected()) });
 		}
+	}
+
+	// Allows results to be updated outside of this class and condenses the common
+	// update request
+	public void refreshResults() {
+		updateResults(search.getText(), (String) sortTypes.getSelectedItem(), filterUnsold.isSelected(), results);
 	}
 
 	private long[] getCategoryList() {

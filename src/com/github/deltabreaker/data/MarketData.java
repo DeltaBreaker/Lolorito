@@ -13,6 +13,8 @@ public class MarketData {
 	// Used to automatically sort market data based on the key given
 	private static TreeMap<Double, MarketData> searchFilter = new TreeMap<>();
 
+	public static ArrayList<Integer> materials = new ArrayList<>();
+
 	private int id;
 	private byte category;
 	private long[] pricesPerUnit;
@@ -219,7 +221,8 @@ public class MarketData {
 		searchFilter.clear();
 
 		for (MarketData m : marketData.values()) {
-			if ((filterUnsold && m.totalSold > 0) || !filterUnsold) {
+			if (((filterUnsold && m.totalSold > 0) || !filterUnsold)
+					&& (m.totalSold > 0 || m.listingPrices.length > 0)) {
 				switch (type) {
 
 				case "Total Sold":
@@ -366,7 +369,7 @@ public class MarketData {
 			}
 
 			if (lowestMarketPrice > 0) {
-				return "" + lowestMarketPrice * count;
+				return (materials.contains(i)) ? "" + 0 : "" + lowestMarketPrice * count;
 			}
 		}
 		return "N/A";

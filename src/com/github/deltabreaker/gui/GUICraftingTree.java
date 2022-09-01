@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,16 +19,19 @@ import com.github.deltabreaker.data.Recipe;
 
 public class GUICraftingTree extends JFrame implements Runnable {
 
+	private static final String WINDOW_TITLE = "Lolorito - ";
 	private static final long serialVersionUID = -8559986460937812745L;
 
 	private static Dimension windowSize = new Dimension(720, 720);
 
-	private int spacing = 80;
+	private HashMap<Integer, JButton> materialButtons = new HashMap<>();
+
+	private int spacing = 100;
 	private int defaultYPosition = 25;
 	private int yPosition = defaultYPosition;
 
-	public GUICraftingTree(Recipe recipe) {
-		setTitle(Item.getItem(recipe.getResult()).getName());
+	public GUICraftingTree(Recipe recipe, GUIMain parent) {
+		setTitle(WINDOW_TITLE + Item.getItem(recipe.getResult()).getName());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(windowSize);
 		setResizable(false);
@@ -67,8 +74,8 @@ public class GUICraftingTree extends JFrame implements Runnable {
 					}
 				}
 
-				g.drawString("Net profit from selling: NQ: " + nqPrice + " / HQ: " + hqPrice,
-						20 + spacing / 2, yPosition + spacing / 4 * 2);
+				g.drawString("Net profit from selling: NQ: " + nqPrice + " / HQ: " + hqPrice, 20 + spacing / 2,
+						yPosition + spacing / 4 * 2);
 
 				yPosition += spacing;
 				drawRecipeComponents(g, recipe, 20);
@@ -86,9 +93,43 @@ public class GUICraftingTree extends JFrame implements Runnable {
 									+ MarketData.getLowestMarketPrice(recipe.getMaterials()[i], recipe.getAmounts()[i]),
 							x + spacing + spacing / 2, yPosition + spacing / 5 * 2);
 					g.drawLine(x, yPosition - 5, x + spacing - 5, yPosition - 5);
+
+					// Adds or repositions material buttons onto the tree
+					int buttonHeight = (Recipe.hasRecipe(recipe.getMaterials()[i])) ? yPosition + spacing / 5 * 3 + 5
+							: yPosition + spacing / 5 * 2 + 5;
+					if (materialButtons.containsKey(recipe.getMaterials()[i])) {
+						materialButtons.get(recipe.getMaterials()[i]).setBounds(x + spacing + spacing / 2, buttonHeight,
+								125, 20);
+					} else {
+						JButton item = new JButton(
+								(MarketData.materials.contains(recipe.getMaterials()[i])) ? "Set as Needed"
+										: "Set as Obtained");
+						item.setBounds(x + spacing + spacing / 2, buttonHeight, 125, 20);
+						item.setFocusable(false);
+
+						int carry = i;
+						item.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								if (MarketData.materials.contains(recipe.getMaterials()[carry])) {
+									MarketData.materials.remove((Object) recipe.getMaterials()[carry]);
+									item.setText("Set as Obtained");
+								} else {
+									MarketData.materials.add(recipe.getMaterials()[carry]);
+									item.setText("Set as Needed");
+								}
+								parent.refreshResults();
+							}
+						});
+						materialButtons.put(recipe.getMaterials()[i], item);
+						this.add(item);
+					}
+
+					// Updates the current material position
 					yPosition += spacing;
 					setPreferredSize(new Dimension(x + spacing + 100, yPosition));
 
+					// Draws the cost of crafting if available
 					if (Recipe.hasRecipe(recipe.getMaterials()[i])) {
 						g.drawString(
 								"Cost of crafting: " + MarketData.getCostOfComponents(recipe.getMaterials()[i],
