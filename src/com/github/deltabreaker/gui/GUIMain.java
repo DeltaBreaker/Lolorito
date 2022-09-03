@@ -38,7 +38,7 @@ import com.github.deltabreaker.main.WebManager;
 
 public class GUIMain extends JFrame {
 
-	private static final String WINDOW_TITLE = "Lolorito - FFXVI v6.2";
+	private static final String WINDOW_TITLE = "Lolorito - v4.0 - FFXVI v6.2";
 	private static final long serialVersionUID = -468143660454460863L;
 
 	public static final String[] DATA_CENTER_LIST = { "Aether", "Primal", "Crystal", "Chaos", "Light", "Elemental",
@@ -367,7 +367,7 @@ public class GUIMain extends JFrame {
 			}
 
 			repaint();
-
+			
 			try {
 				Thread.sleep(100L);
 			} catch (InterruptedException e1) {

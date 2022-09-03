@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -17,7 +19,7 @@ import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
 import com.github.deltabreaker.data.Recipe;
 
-public class GUICraftingTree extends JFrame implements Runnable {
+public class GUICraftingTree extends JFrame {
 
 	private static final String WINDOW_TITLE = "Lolorito - ";
 	private static final long serialVersionUID = -8559986460937812745L;
@@ -31,6 +33,8 @@ public class GUICraftingTree extends JFrame implements Runnable {
 	private int yPosition = defaultYPosition;
 
 	public GUICraftingTree(Recipe recipe, GUIMain parent) {
+		parent.setEnabled(false);
+		
 		setTitle(WINDOW_TITLE + Item.getItem(recipe.getResult()).getName());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(windowSize);
@@ -38,6 +42,13 @@ public class GUICraftingTree extends JFrame implements Runnable {
 		setLayout(null);
 		setLocationRelativeTo(null);
 
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				parent.setEnabled(true);
+			}
+		});
+		
 		JScrollPane resultsPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		resultsPane.setBounds(0, 0, windowSize.width - 15, windowSize.height - 38);
@@ -146,19 +157,6 @@ public class GUICraftingTree extends JFrame implements Runnable {
 		resultsPane.setViewportView(tree);
 
 		setVisible(true);
-	}
-
-	@Override
-	public void run() {
-		while (isVisible()) {
-			repaint();
-
-			try {
-				Thread.sleep(100L);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		}
 	}
 
 }
