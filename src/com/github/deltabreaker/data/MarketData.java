@@ -17,13 +17,10 @@ public class MarketData {
 
 	private int id;
 	private byte category;
-	private long[] pricesPerUnit;
-	private int[] quantities;
 	private long[] listingPrices;
 	private boolean[] isHQ;
 
 	private double averageGilPerUnit;
-	private double averageGilPerSale;
 	private double averageStackSize;
 
 	private double totalProfit = 0;
@@ -90,8 +87,6 @@ public class MarketData {
 
 		this.id = id;
 		this.category = category;
-		this.pricesPerUnit = pricesPerUnit;
-		this.quantities = quantities;
 		this.listingPrices = listingPrices;
 		this.isHQ = isHQ;
 
@@ -110,7 +105,7 @@ public class MarketData {
 		}
 
 		averageGilPerUnit /= Math.max(pricesPerUnit.length, 1);
-		averageGilPerSale = totalProfit / Math.max(pricesPerUnit.length, 1);
+//		averageGilPerSale = totalProfit / Math.max(pricesPerUnit.length, 1);
 		averageStackSize /= Math.max(quantities.length, 1);
 	}
 
