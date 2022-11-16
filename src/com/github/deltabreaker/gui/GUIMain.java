@@ -41,7 +41,7 @@ public class GUIMain extends JFrame {
 	private static final String WINDOW_TITLE = "Lolorito - v4.0 - FFXVI v6.2";
 	private static final long serialVersionUID = -468143660454460863L;
 
-	public static final String[] DATA_CENTER_LIST = { "Aether", "Primal", "Crystal", "Chaos", "Light", "Elemental",
+	public static final String[] DATA_CENTER_LIST = { "Aether", "Primal", "Crystal", "Dynamis", "Chaos", "Light", "Elemental",
 			"Gaia", "Mana", "Meteor", "Materia" };
 
 	public static final String[][] SERVER_LIST = {
@@ -49,6 +49,7 @@ public class GUIMain extends JFrame {
 					"Siren" },
 			new String[] { "Behemoth", "Excalibur", "Exodus", "Famfrit", "Hyperion", "Lamia", "Leviathan", "Ultros" },
 			new String[] { "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera" },
+			new String[] { "Marilith", "Seraph", "Halicarnassus", "Maduin" },
 			new String[] { "Cerberus", "Louisoix", "Moogle", "Omega", "Ragnarok", "Spriggan", "Sagittarius",
 					"Phantom" },
 			new String[] { "Lich", "Odin", "Phoenix", "Shiva", "Zodiark", "Twintania", "Alpha", "Raiden" },
@@ -367,7 +368,7 @@ public class GUIMain extends JFrame {
 			}
 
 			repaint();
-			
+
 			try {
 				Thread.sleep(100L);
 			} catch (InterruptedException e1) {
