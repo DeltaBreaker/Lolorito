@@ -1,7 +1,5 @@
 package com.github.deltabreaker.main;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -33,19 +31,13 @@ public class FileManager {
 	public static final byte RECIPE_IS_SPECIALIST_LOCATION = 44;
 	public static final byte RECIPE_CRAFT_TYPE_LOCATION = 2;
 
-	public static void loadCSVItemData(String file) {
-		try {
-			Item.clearItemData();
-			parseItemData(readCSVData(new FileReader(file)));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading CSV data.");
-		}
-	}
+	public static final byte VENTURE_ITEM_LOCATION = 1;
+	public static final byte VENTURE_AMT_LOCATION = 6;
 
-	public static void loadCSVItemData(InputStream in) {
+	public static void loadCSVItemData(InputStream itemData, InputStream ventureData) {
 		Item.clearItemData();
-		parseItemData(readCSVData(new InputStreamReader(in)));
+		parseItemData(readCSVData(new InputStreamReader(itemData)));
+		parseVentureData(readCSVData(new InputStreamReader(ventureData)));
 	}
 
 	public static void loadCSVRecipeData(InputStream in) {
@@ -142,6 +134,21 @@ public class FileManager {
 			e.printStackTrace();
 			System.out.println(LocalDateTime.now() + " [FileManager]: Error reading category data.");
 		}
+	}
+
+	public static void parseVentureData(String[][] data) {
+		for (String[] s : data) {
+			try {
+				if (isNumeric(s[0]) && Item.hasItemForID(Integer.parseInt(s[VENTURE_ITEM_LOCATION]))) {
+					Item.getItem(Integer.parseInt(s[VENTURE_ITEM_LOCATION]))
+							.setVenture(Integer.parseInt(s[VENTURE_AMT_LOCATION]));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(LocalDateTime.now() + " [FileManager]: Error loading venture. Skipping.");
+			}
+		}
+		System.out.println(LocalDateTime.now() + " [FileManager]: Venture data loaded.");
 	}
 
 }

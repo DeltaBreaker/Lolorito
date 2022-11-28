@@ -254,6 +254,13 @@ public class MarketData {
 								}
 								break;
 
+							case "Venture Rewards":
+								if(Item.getItem(m.id).hasVenture()) {
+									double potentialGil = m.averageGilPerUnit * Math.min((Item.getItem(m.id).getVentureAmount() * 24), m.totalSold);
+									searchFilter.put(potentialGil, m);
+								}
+								break;
+								
 							default:
 								searchFilter.put((double) m.totalProfit + new Random().nextFloat(), m);
 								break;

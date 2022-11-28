@@ -2,20 +2,20 @@ package com.github.deltabreaker.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Item {
 
 	private static HashMap<Integer, Item> marketableItemTable = new HashMap<>();
 	private static HashMap<Integer, Item> completeItemTable = new HashMap<>();
 	private static HashMap<String, Integer> nameTable = new HashMap<>();
-	private static Map<String, Integer> categories = new LinkedHashMap<>();
+	private static HashMap<String, Integer> categories = new HashMap<>();
 
 	private int id;
 	private String name;
 	private byte category;
-
+	private boolean hasVenture = false;
+	private int ventureAmt;
+	
 	public Item(int id, String name, byte category) {
 		this.id = id;
 		this.name = name;
@@ -34,6 +34,19 @@ public class Item {
 		return category;
 	}
 
+	public boolean hasVenture() {
+		return hasVenture;
+	}
+	
+	public int getVentureAmount() {
+		return ventureAmt;
+	}
+	
+	public void setVenture(int amount) {
+		hasVenture = true;
+		ventureAmt = amount;
+	}
+	
 	public static Item getItem(int id) {
 		return completeItemTable.get(id);
 	}

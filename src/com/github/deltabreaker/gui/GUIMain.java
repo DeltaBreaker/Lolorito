@@ -34,11 +34,12 @@ import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
 import com.github.deltabreaker.data.Recipe;
 import com.github.deltabreaker.main.GUIMarketUpdateThread;
+import com.github.deltabreaker.main.Startup;
 import com.github.deltabreaker.main.WebManager;
 
 public class GUIMain extends JFrame {
-
-	private static final String WINDOW_TITLE = "Lolorito - v4.0 - FFXVI v6.2";
+	
+	private static final String WINDOW_TITLE = "Lolorito - v5.0 - FFXVI v6.2";
 	private static final long serialVersionUID = -468143660454460863L;
 
 	public static final String[] DATA_CENTER_LIST = { "Aether", "Primal", "Crystal", "Dynamis", "Chaos", "Light", "Elemental",
@@ -63,7 +64,7 @@ public class GUIMain extends JFrame {
 			"Lowest NQ Price", "Lowest HQ Price", "Crafting Profit" };
 
 	public static final String[] SORT_TYPES = { "Total Gil Made", "Avg. Price", "Total Sold", "Listed NQ Price",
-			"Listed HQ Price", "Crafting Profit" };
+			"Listed HQ Price", "Crafting Profit", "Venture Rewards" };
 
 	private static final Border BORDER = BorderFactory.createLineBorder(Color.BLACK);
 
@@ -80,6 +81,7 @@ public class GUIMain extends JFrame {
 
 	public GUIMain() {
 		setTitle(WINDOW_TITLE);
+		setIconImage(Startup.ICON.getImage());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(windowSize);
 		setResizable(false);

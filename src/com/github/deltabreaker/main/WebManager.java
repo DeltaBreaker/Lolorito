@@ -47,25 +47,30 @@ public class WebManager {
 			System.out.println(LocalDateTime.now() + " [WebHandler]: Updating market data. Result limit: " + resultLimit
 					+ " | Recentcy: " + recentcy + " | URL Limit: " + URL_ID_LIMIT);
 			isUpdating = true;
+			boolean retry = false;
+			String url = "";
 			while (idArray.size() > 0) {
 				long time = System.currentTimeMillis();
 				try {
 					// Build the URL from the base URL and id list
-					StringBuilder idList = new StringBuilder();
-					int arraySize = idArray.size();
-					idList.append(idArray.get(0));
-					idArray.remove(0);
-					for (int i = 1; i < Math.min(arraySize, URL_ID_LIMIT); i++) {
-						idList.append("%2C%20");
+					if (!retry) {
+						StringBuilder idList = new StringBuilder();
+						int arraySize = idArray.size();
 						idList.append(idArray.get(0));
 						idArray.remove(0);
+						for (int i = 1; i < Math.min(arraySize, URL_ID_LIMIT); i++) {
+							idList.append("%2C%20");
+							idList.append(idArray.get(0));
+							idArray.remove(0);
+						}
+						url = BASE_URL + server.toLowerCase() + "/" + idList.toString() + "?entries=" + resultLimit
+								+ "&entriesWithin=" + recentcy;
 					}
-					String url = BASE_URL + server.toLowerCase() + "/" + idList.toString() + "?entries=" + resultLimit
-							+ "&entriesWithin=" + recentcy;
 
 					// Parses the JSON data received and updates the market data
 					JSONObject response = (JSONObject) new JSONParser().parse(get(url, URL_ID_LIMIT * 1000));
 					JSONArray itemList = (JSONArray) response.get("items");
+					retry = false;
 					if (itemList != null) {
 						for (int i = 0; i < itemList.size(); i++) {
 							try {
@@ -104,9 +109,10 @@ public class WebManager {
 					System.out.println(
 							LocalDateTime.now() + " [MatketUpdateThread]: Block updated. " + idArray.size() + " left");
 				} catch (Exception e) {
-					e.printStackTrace();
+					retry = true;
 					System.out.println(LocalDateTime.now()
-							+ " [MatketUpdateThread]: Error updating this block of items. Continuing");
+							+ " [MatketUpdateThread]: Error updating this block of items. Retrying...");
+					e.printStackTrace();
 				}
 
 				updateProgress = 1 - ((double) idArray.size() / Item.getMarketableItemListSize());

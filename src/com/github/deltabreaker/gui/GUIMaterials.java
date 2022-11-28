@@ -22,6 +22,7 @@ import javax.swing.text.AbstractDocument;
 
 import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
+import com.github.deltabreaker.main.Startup;
 
 public class GUIMaterials extends JFrame {
 
@@ -44,6 +45,7 @@ public class GUIMaterials extends JFrame {
 		parent.setEnabled(false);
 
 		setTitle(WINDOW_TITLE);
+		setIconImage(Startup.ICON.getImage());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(windowSize);
 		setResizable(false);

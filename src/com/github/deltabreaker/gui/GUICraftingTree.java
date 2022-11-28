@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import com.github.deltabreaker.data.Item;
 import com.github.deltabreaker.data.MarketData;
 import com.github.deltabreaker.data.Recipe;
+import com.github.deltabreaker.main.Startup;
 
 public class GUICraftingTree extends JFrame {
 
@@ -36,6 +37,7 @@ public class GUICraftingTree extends JFrame {
 		parent.setEnabled(false);
 		
 		setTitle(WINDOW_TITLE + Item.getItem(recipe.getResult()).getName());
+		setIconImage(Startup.ICON.getImage());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(windowSize);
 		setResizable(false);
