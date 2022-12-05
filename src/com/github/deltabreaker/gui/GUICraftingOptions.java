@@ -103,7 +103,7 @@ public class GUICraftingOptions extends JFrame {
 		JSlider level = new JSlider();
 		level.setBounds(uiWidth + 20, 30, uiWidth, 20);
 		level.setMinimum(1);
-		level.setMaximum(maxLevel);
+		level.setMaximum(Recipe.getMaxLevel());
 		level.setValue(maxLevel);
 		level.addChangeListener(new ChangeListener() {
 			@Override

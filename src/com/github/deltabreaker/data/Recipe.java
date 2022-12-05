@@ -67,6 +67,10 @@ public class Recipe {
 		return level;
 	}
 	
+	public static int getMaxLevel() {
+		return maxLevel;
+	}
+	
 	public byte[] getCrafterTypes() {
 		byte[] result = new byte[crafterType.size()];
 		for(int i = 0; i < result.length; i++) {

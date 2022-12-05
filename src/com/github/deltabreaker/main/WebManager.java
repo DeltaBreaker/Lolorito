@@ -26,6 +26,7 @@ public class WebManager {
 	private static String server = GUIMain.SERVER_LIST[0][0];
 	private static double updateProgress = 0;
 	private static boolean isUpdating = false;
+	private static byte retryLimit = 5;
 
 	private static String get(String url, long timeout) throws Exception {
 		URL website = new URL(url);
@@ -49,7 +50,8 @@ public class WebManager {
 			isUpdating = true;
 			boolean retry = false;
 			String url = "";
-			while (idArray.size() > 0) {
+			byte retries = 0;
+			while (idArray.size() > 0 && retries < retryLimit ) {
 				long time = System.currentTimeMillis();
 				try {
 					// Build the URL from the base URL and id list
@@ -110,11 +112,13 @@ public class WebManager {
 							LocalDateTime.now() + " [MatketUpdateThread]: Block updated. " + idArray.size() + " left");
 				} catch (Exception e) {
 					retry = true;
+					retries++;
 					System.out.println(LocalDateTime.now()
-							+ " [MatketUpdateThread]: Error updating this block of items. Retrying...");
+							+ " [MatketUpdateThread]: Error updating this block of items on attempt: " + retries + " Retrying...");
 					e.printStackTrace();
 				}
 
+				retries = 0;
 				updateProgress = 1 - ((double) idArray.size() / Item.getMarketableItemListSize());
 
 				// Keeps the requests limited to a certain rate without increasing wait time

@@ -241,6 +241,9 @@ public class MarketData {
 							if(!GUICraftingOptions.includeSpecialist && r.isSpecialist()) {
 								passesCraftCheck = false;
 							}
+							if(r.getLevel() > GUICraftingOptions.maxLevel) {
+								passesCraftCheck = false;
+							}
 						}
 						
 						if ((matchesCat || categories.length == 0) && (!checkCraftingOptions || passesCraftCheck)) {
