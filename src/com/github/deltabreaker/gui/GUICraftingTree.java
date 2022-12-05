@@ -69,6 +69,15 @@ public class GUICraftingTree extends JFrame {
 				yPosition = defaultYPosition;
 				g.drawString(Item.getItem(recipe.getResult()).getName() + " x " + recipe.getAmount(), 20, yPosition);
 
+				String text = "Recipe Level: " + recipe.getLevel();
+				if(recipe.isExpert()) {
+					text += ",  Is Expert";
+				}
+				if(recipe.isSpecialist()) {
+					text += ",  Is Specialist";
+				}
+				g.drawString(text, 350, yPosition);
+				
 				String costOfCrafting = MarketData.getCostOfComponents(recipe.getResult(), 1);
 				g.drawString("Cost of crafting: " + costOfCrafting, 20 + spacing / 2, yPosition + spacing / 4);
 

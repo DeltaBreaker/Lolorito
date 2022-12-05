@@ -1,7 +1,11 @@
 package com.github.deltabreaker.main;
 
+import java.util.Arrays;
+
 import javax.swing.ImageIcon;
 
+import com.github.deltabreaker.data.Recipe;
+import com.github.deltabreaker.gui.GUICraftingOptions;
 import com.github.deltabreaker.gui.GUIMain;
 
 public class Startup {
@@ -17,6 +21,8 @@ public class Startup {
 		FileManager.loadCSVItemData(Startup.class.getClassLoader().getResourceAsStream(ITEM_DATA), Startup.class.getClassLoader().getResourceAsStream(VENTURE_DATA));
 		FileManager.loadCSVRecipeData(Startup.class.getClassLoader().getResourceAsStream(RECIPE_DATA));
 		FileManager.loadCategories(Startup.class.getClassLoader().getResourceAsStream(CATEGORY_DATA));
+		GUICraftingOptions.enabledCrafters = new boolean[Recipe.CRAFT_TYPES.length];
+		Arrays.fill(GUICraftingOptions.enabledCrafters, true);
 		new GUIMain();
 	}
 

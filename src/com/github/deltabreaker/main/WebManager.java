@@ -108,6 +108,7 @@ public class WebManager {
 							}
 						}
 					}
+					retries = 0;
 					System.out.println(
 							LocalDateTime.now() + " [MatketUpdateThread]: Block updated. " + idArray.size() + " left");
 				} catch (Exception e) {
@@ -117,8 +118,7 @@ public class WebManager {
 							+ " [MatketUpdateThread]: Error updating this block of items on attempt: " + retries + " Retrying...");
 					e.printStackTrace();
 				}
-
-				retries = 0;
+				
 				updateProgress = 1 - ((double) idArray.size() / Item.getMarketableItemListSize());
 
 				// Keeps the requests limited to a certain rate without increasing wait time

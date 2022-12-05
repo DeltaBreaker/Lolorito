@@ -33,11 +33,6 @@ public class GUICraftingOptions extends JFrame {
 	private static Dimension windowSize = new Dimension(uiWidth * 2 + 55, 0);
 
 	public GUICraftingOptions(GUIMain parent) {
-		if (enabledCrafters == null) {
-			enabledCrafters = new boolean[Recipe.CRAFT_TYPES.length];
-			Arrays.fill(enabledCrafters, true);
-		}
-
 		parent.setEnabled(false);
 		
 		setTitle(WINDOW_TITLE);
@@ -83,7 +78,7 @@ public class GUICraftingOptions extends JFrame {
 
 			types[i] = new JCheckBox();
 			types[i].setBounds(uiWidth - 45, 10 + i * 30, 20, 20);
-			types[i].setSelected(true);
+			types[i].setSelected(enabledCrafters[i]);
 
 			int loc = i;
 			types[i].addActionListener(new ActionListener() {

@@ -244,6 +244,11 @@ public class MarketData {
 							if(r.getLevel() > GUICraftingOptions.maxLevel) {
 								passesCraftCheck = false;
 							}
+							for(int i : r.getCrafterTypes()) {
+								if(!GUICraftingOptions.enabledCrafters[i]) {
+									passesCraftCheck = false;
+								}
+							}
 						}
 						
 						if ((matchesCat || categories.length == 0) && (!checkCraftingOptions || passesCraftCheck)) {
