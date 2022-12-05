@@ -30,6 +30,7 @@ public class FileManager {
 	public static final byte RECIPE_IS_EXPERT_LOCATION = 45;
 	public static final byte RECIPE_IS_SPECIALIST_LOCATION = 44;
 	public static final byte RECIPE_CRAFT_TYPE_LOCATION = 2;
+	public static final byte RECIPE_LEVEL_LOCATION = 3;
 
 	public static final byte VENTURE_ITEM_LOCATION = 1;
 	public static final byte VENTURE_AMT_LOCATION = 6;
@@ -102,7 +103,8 @@ public class FileManager {
 							ArrayUtils.toPrimitive(materialAmounts.toArray(new Integer[materialAmounts.size()])),
 							Boolean.parseBoolean(s[RECIPE_IS_EXPERT_LOCATION]),
 							Boolean.parseBoolean(s[RECIPE_IS_SPECIALIST_LOCATION]),
-							Byte.parseByte(s[RECIPE_CRAFT_TYPE_LOCATION]));
+							Byte.parseByte(s[RECIPE_CRAFT_TYPE_LOCATION]),
+							Byte.parseByte(s[RECIPE_LEVEL_LOCATION]));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

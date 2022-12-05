@@ -1,11 +1,12 @@
 package com.github.deltabreaker.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Recipe {
 
-	public static final String[] CRAFT_TYPES = { "Woodworking", "Smithing", "Armorcraft", "Goldsmithing",
-			"Leatherworking", "Clothcraft", "Alchemy", "Cooking" };
+	public static final String[] CRAFT_TYPES = { "Carpenter", "Blacksmith", "Armorer", "Goldsmith", "Leatherworker",
+			"Weaver", "Alchemist", "Culinarian" };
 
 	private static HashMap<Integer, Recipe> recipes = new HashMap<>();
 
@@ -15,17 +16,19 @@ public class Recipe {
 	private int[] amounts;
 	private boolean isExpert;
 	private boolean isSpecialist;
-	private byte crafterType;
+	private ArrayList<Byte> crafterType = new ArrayList<>();
+	private byte level;
 
 	public Recipe(int result, int amount, int[] materials, int[] amounts, boolean isExpert, boolean isSpecialist,
-			byte crafterType) {
+			byte crafterType, byte level) {
 		this.result = result;
 		this.amount = amount;
 		this.materials = materials;
 		this.amounts = amounts;
 		this.isExpert = isExpert;
 		this.isSpecialist = isSpecialist;
-		this.crafterType = crafterType;
+		this.crafterType.add(crafterType);
+		this.level = level;
 	}
 
 	public int getResult() {
@@ -52,13 +55,21 @@ public class Recipe {
 		return isSpecialist;
 	}
 
-	public int getCrafterType() {
-		return crafterType;
+	public byte[] getCrafterTypes() {
+		byte[] result = new byte[crafterType.size()];
+		for(int i = 0; i < result.length; i++) {
+			result[i] = crafterType.get(i);
+		}
+		return result;
 	}
 
 	public static void loadRecipe(int result, int amount, int[] materials, int[] amounts, boolean isExpert,
-			boolean isSpecialist, byte crafterType) {
-		recipes.put(result, new Recipe(result, amount, materials, amounts, isExpert, isSpecialist, crafterType));
+			boolean isSpecialist, byte crafterType, byte level) {
+		if (!recipes.containsKey(result)) {
+			recipes.put(result, new Recipe(result, amount, materials, amounts, isExpert, isSpecialist, crafterType, level));
+		} else {
+			recipes.get(result).crafterType.add(crafterType);
+		}
 	}
 
 	public static int getRecipeCount() {
@@ -76,5 +87,5 @@ public class Recipe {
 	public static boolean hasRecipe(int id) {
 		return recipes.containsKey(id);
 	}
-	
+
 }
