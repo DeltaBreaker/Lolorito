@@ -26,8 +26,8 @@ public class GUICraftingOptions extends JFrame {
 
 	public static boolean[] enabledCrafters;
 	public static int maxLevel;
-	public static boolean includeExpert;
-	public static boolean includeSpecialist;
+	public static boolean includeExpert = true;
+	public static boolean includeSpecialist = true;
 
 	private static int uiWidth = 275;
 	private static Dimension windowSize = new Dimension(uiWidth * 2 + 55, 0);
@@ -122,6 +122,7 @@ public class GUICraftingOptions extends JFrame {
 
 		JCheckBox expert = new JCheckBox();
 		expert.setBounds(uiWidth + 30, 50, 20, 20);
+		expert.setSelected(includeExpert);
 		expert.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -138,6 +139,7 @@ public class GUICraftingOptions extends JFrame {
 
 		JCheckBox specialist = new JCheckBox();
 		specialist.setBounds(uiWidth + 30, 80, 20, 20);
+		specialist.setSelected(includeSpecialist);
 		specialist.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.TreeMap;
 
+import com.github.deltabreaker.gui.GUICraftingOptions;
+
 public class MarketData {
 
 	private static HashMap<Integer, MarketData> marketData = new HashMap<>();
@@ -228,7 +230,20 @@ public class MarketData {
 								break;
 							}
 						}
-						if (matchesCat || categories.length == 0) {
+						
+						boolean checkCraftingOptions = Recipe.hasRecipe(m.id);
+						boolean passesCraftCheck = true;
+						if(checkCraftingOptions) {
+							Recipe r = Recipe.getRecipe(m.id);
+							if(!GUICraftingOptions.includeExpert && r.isExpert()) {
+								passesCraftCheck = false;
+							}
+							if(!GUICraftingOptions.includeSpecialist && r.isSpecialist()) {
+								passesCraftCheck = false;
+							}
+						}
+						
+						if ((matchesCat || categories.length == 0) && (!checkCraftingOptions || passesCraftCheck)) {
 							switch (type) {
 
 							case "Total Sold":
