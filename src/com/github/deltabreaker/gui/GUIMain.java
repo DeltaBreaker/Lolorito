@@ -79,7 +79,7 @@ public class GUIMain extends JFrame {
 	private JComboBox<String> sortTypes;
 	private JCheckBox filterUnsold;
 
-	public GUIMain() {
+	public GUIMain() {		
 		setTitle(WINDOW_TITLE);
 		setIconImage(Startup.ICON.getImage());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -357,6 +357,18 @@ public class GUIMain extends JFrame {
 		});
 		add(materialsButton);
 
+		JButton craftingButton = new JButton("Crafting Options");
+		craftingButton.setBounds(10, 450, uiWidth, 20);
+		craftingButton.setFocusable(false);
+		craftingButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new GUICraftingOptions(parent);
+			}
+
+		});
+		add(craftingButton);
+		
 		setLocationRelativeTo(null);
 		setVisible(true);
 

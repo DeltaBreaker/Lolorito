@@ -57,6 +57,7 @@ public class GUIMaterials extends JFrame {
 			public void windowClosed(WindowEvent e) {
 				parent.setEnabled(true);
 				parent.refreshResults();
+				parent.requestFocus();
 			}
 		});
 

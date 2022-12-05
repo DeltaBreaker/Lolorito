@@ -104,7 +104,7 @@ public class FileManager {
 							Boolean.parseBoolean(s[RECIPE_IS_EXPERT_LOCATION]),
 							Boolean.parseBoolean(s[RECIPE_IS_SPECIALIST_LOCATION]),
 							Byte.parseByte(s[RECIPE_CRAFT_TYPE_LOCATION]),
-							Byte.parseByte(s[RECIPE_LEVEL_LOCATION]));
+							Integer.parseInt(s[RECIPE_LEVEL_LOCATION]));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
