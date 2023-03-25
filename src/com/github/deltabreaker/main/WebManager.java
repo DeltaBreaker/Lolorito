@@ -16,7 +16,7 @@ import com.github.deltabreaker.data.MarketData;
 import com.github.deltabreaker.gui.GUIMain;
 
 public class WebManager {
-
+	
 	public static final String BASE_URL = "https://universalis.app/api/";
 	public static final long DEFAULT_RESULTS_SIZE = 200;
 	public static final long DEFAULT_RECENTCY = 86400;
