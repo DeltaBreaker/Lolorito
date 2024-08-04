@@ -12,7 +12,7 @@ import com.github.deltabreaker.gui.GUIMain;
 
 public class Startup {
 	
-	public static final String VERSION = "v6.0";
+	public static final String VERSION = "v5.1";
 	
 	private static final String ITEM_URL = "https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/Item.csv";
 	private static final String RECIPE_URL = "https://raw.githubusercontent.com/xivapi/ffxiv-datamining/master/csv/Recipe.csv";
