@@ -23,12 +23,12 @@ public class FileManager {
 	public static final byte ITEM_TRADABLE_LOCATION = 23;
 	public static final byte ITEM_COLLECTABLE_LOCATION = 39;
 
-	public static final byte RECIPE_RESULT_LOCATION = 4;
-	public static final byte RECIPE_RESULT_AMOUNT_LOCATION = 5;
-	public static final byte[] RECIPE_MATERIAL_POSITIONS = { 6, 8, 10, 12, 14, 16, 18, 20 };
-	public static final byte[] RECIPE_MATERIAL_AMOUNT_POSITIONS = { 7, 9, 11, 13, 15, 17, 19, 21 };
-	public static final byte RECIPE_IS_EXPERT_LOCATION = 42;
-	public static final byte RECIPE_IS_SPECIALIST_LOCATION = 41;
+	public static final byte RECIPE_RESULT_LOCATION = 5;
+	public static final byte RECIPE_RESULT_AMOUNT_LOCATION = 6;
+	public static final byte[] RECIPE_MATERIAL_POSITIONS = { 7, 9, 11, 13, 15, 17, 19, 21 };
+	public static final byte[] RECIPE_MATERIAL_AMOUNT_POSITIONS = { 8, 10, 12, 14, 16, 18, 20, 22 };
+	public static final byte RECIPE_IS_EXPERT_LOCATION = 43;
+	public static final byte RECIPE_IS_SPECIALIST_LOCATION = 42;
 	public static final byte RECIPE_CRAFT_TYPE_LOCATION = 2;
 	public static final byte RECIPE_LEVEL_LOCATION = 3;
 
